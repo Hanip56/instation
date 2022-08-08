@@ -6,15 +6,15 @@ const {
   deleteUser,
   followUser,
   unfollowUser,
+  getPersonalAccount,
 } = require("../controllers/userControllers");
 const { protect } = require("../middleware/authMiddleware");
-// get one user
 
-router
-  .route("/:userId")
-  .get(getOneUser)
-  .put(protect, updateUser)
-  .delete(protect, deleteUser);
+router.get("/personal", protect, getPersonalAccount);
+
+router.route("/:userId").put(protect, updateUser).delete(protect, deleteUser);
+
+router.get("/:username", getOneUser);
 
 router.put("/:userId/follow", protect, followUser);
 router.put("/:userId/unfollow", protect, unfollowUser);

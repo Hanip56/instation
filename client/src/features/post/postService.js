@@ -1,0 +1,39 @@
+import axios from "axios";
+
+const API_URL = "/api/post/";
+
+const getPostsFollowing = async (token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  const res = await axios.get(API_URL + "postsfollowing", config);
+
+  return res.data;
+};
+
+const likePost = async (postId, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  let data = {};
+
+  const res = await axios.put(
+    API_URL + postId + "/likeandunlike",
+    data,
+    config
+  );
+
+  return res.data;
+};
+
+const postService = {
+  getPostsFollowing,
+  likePost,
+};
+
+export default postService;

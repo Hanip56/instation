@@ -29,12 +29,18 @@ const uploadPost = asyncHandler(async (req, res) => {
         caption: req.body.caption,
         image: req.file.filename,
       });
-      await user.updateOne({ $push: { posts: newPost } });
+      await user.updateOne({ $push: { posts: newPost._id } });
 
-      res.status(201).json(newPost);
+      res.status(201).json({
+        _id: newPost._id,
+        comments: newPost.comments,
+        likes: newPost.likes,
+        image: newPost.image,
+      });
     } catch (error) {
       fs.unlinkSync(req.file.path);
-      res.status(500).json({ message: error.message });
+      res.status(500);
+      throw new Error(error.message);
     }
   });
 });
@@ -118,11 +124,27 @@ const likeAndUnlike = asyncHandler(async (req, res) => {
   if (!post.likes.includes(req.user._id)) {
     await post.updateOne({ $push: { likes: req.user._id } });
 
-    res.status(200).json("The post has been liked");
+    res.status(200).json({
+      id: req.params.postId,
+      user: {
+        _id: req.user._id,
+        username: req.user.username,
+        profilePicture: req.user.profilePicture,
+      },
+      message: "The post has been liked",
+    });
   } else {
     await post.updateOne({ $pull: { likes: req.user._id } });
 
-    res.status(200).json("The post has been unliked");
+    res.status(200).json({
+      id: req.params.postId,
+      user: {
+        _id: req.user._id,
+        username: req.user.username,
+        profilePicture: req.user.profilePicture,
+      },
+      message: "The post has been unliked",
+    });
   }
 });
 

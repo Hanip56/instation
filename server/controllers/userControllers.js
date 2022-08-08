@@ -1,13 +1,43 @@
 const User = require("../models/User");
 const asyncHandler = require("express-async-handler");
 
-// @desc    get one user
+// @desc    get personal account info
 // @route   GET /api/user/:userId
 // @access  PUBLIC
-const getOneUser = asyncHandler(async (req, res) => {
-  const userId = req.params.userId;
+const getPersonalAccount = asyncHandler(async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id)
+      .populate({
+        path: "followings followers",
+        select: "_id username profilePicture fullname",
+      })
+      .populate({
+        path: "saved posts",
+        select: "_id image comments likes",
+      });
 
-  const user = await User.findById(userId);
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500);
+    throw new Error(error.message);
+  }
+});
+
+// @desc    get one user
+// @route   GET /api/user/:username
+// @access  PUBLIC
+const getOneUser = asyncHandler(async (req, res) => {
+  const username = req.params.username;
+
+  const user = await User.findOne({ username })
+    .populate({
+      path: "followings followers",
+      select: "_id username profilePicture fullname",
+    })
+    .populate({
+      path: "saved posts",
+      select: "_id image comments likes",
+    });
 
   if (!user) {
     res.status(404);
@@ -75,7 +105,14 @@ const followUser = asyncHandler(async (req, res) => {
     await targetUser.updateOne({ $push: { followers: _id } });
     await currentUser.updateOne({ $push: { followings: userId } });
 
-    res.status(200).json("User Followed");
+    res.status(200).json({
+      user: {
+        _id: targetUser._id,
+        username: targetUser.username,
+        profilePicture: targetUser.profilePicture,
+      },
+      message: "User Followed",
+    });
   } else {
     res.status(400).json("You already followed this account");
   }
@@ -100,13 +137,21 @@ const unfollowUser = asyncHandler(async (req, res) => {
     await targetUser.updateOne({ $pull: { followers: _id } });
     await currentUser.updateOne({ $pull: { followings: userId } });
 
-    res.status(200).json("Unfollowed successfully");
+    res.status(200).json({
+      user: {
+        _id: targetUser._id,
+        username: targetUser.username,
+        profilePicture: targetUser.profilePicture,
+      },
+      message: "Unfollowed Succesfully",
+    });
   } else {
     res.status(400).json("You already unfollowed this account");
   }
 });
 
 module.exports = {
+  getPersonalAccount,
   getOneUser,
   getAllUsers,
   updateUser,

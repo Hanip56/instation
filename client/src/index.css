@@ -6,4 +6,16 @@
   .listBtn {
     @apply text-sm text-blue-400 font-semibold;
   }
+  .input {
+    @apply w-full bg-[#fafafa] p-2 border border-gray-300 placeholder:text-sm hover:border-gray-400 outline-none rounded-sm;
+  }
+  .contentContainer {
+    @apply border border-gray-300 rounded-sm bg-white;
+  }
+  .error {
+    @apply text-sm text-red-500;
+  }
+  .boxList {
+    @apply flex items-center gap-x-2 p-3 w-full hover:bg-[#fafafa];
+  }
 }

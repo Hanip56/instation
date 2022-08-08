@@ -14,16 +14,22 @@ const register = asyncHandler(async (req, res) => {
     throw new Error("User already exist");
   }
 
-  const user = await User.create({
-    fullname,
-    username,
-    email,
-    password,
-    gender,
-  });
+  let user;
+
+  try {
+    user = await User.create({
+      fullname,
+      username,
+      email,
+      password,
+      gender,
+    });
+  } catch (error) {
+    res.status(400);
+    throw new Error(error.message);
+  }
 
   res.status(200).json({
-    id: user._id,
     token: user.getSignedToken(),
   });
 });
@@ -54,7 +60,6 @@ const login = asyncHandler(async (req, res) => {
   }
 
   res.status(200).json({
-    id: user._id,
     token: user.getSignedToken(),
   });
 });

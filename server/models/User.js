@@ -12,6 +12,7 @@ const UserSchema = mongoose.Schema(
     username: {
       type: String,
       required: [true, "Please provide a username"],
+      unique: true,
     },
     email: {
       type: String,
@@ -31,19 +32,43 @@ const UserSchema = mongoose.Schema(
     gender: {
       type: String,
       enum: ["male", "female"],
-      required: true,
+      // required: true,
+      // default: "male",
     },
     isAdmin: {
       type: Boolean,
       default: false,
     },
     // for profile detail
-    profilePicture: String,
+    profilePicture: {
+      type: String,
+      default: "defaultProfile.png",
+    },
     porfileBio: String,
-    posts: [],
-    saved: [],
-    followings: [],
-    followers: [],
+    posts: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Post",
+      },
+    ],
+    saved: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Post",
+      },
+    ],
+    followings: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+    followers: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
     birthday: Date,
     address: String,
   },
