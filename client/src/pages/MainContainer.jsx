@@ -8,6 +8,7 @@ import ProfilePages from "./ProfilePages";
 import { useEffect } from "react";
 import { getPersonalAccount } from "../features/auth/userSlice";
 import ModalPost from "../components/UI/ModalPost";
+import Explore from "./Explore";
 
 const MainContainer = () => {
   const { showModal } = useSelector((state) => state.createPost);
@@ -29,6 +30,7 @@ const MainContainer = () => {
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<h1>About</h1>} />
           <Route path="/:username" element={<ProfilePages />} />
+          <Route path="/explore" element={<Explore />} />
           <Route path="/signin" element={<Navigate to="/" replace />} />
           <Route path="/signup" element={<Navigate to="/" replace />} />
         </Routes>

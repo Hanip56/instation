@@ -31,9 +31,27 @@ const likePost = async (postId, token) => {
   return res.data;
 };
 
+const savePost = async (postId, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  let data = {};
+
+  const res = await axios.put(
+    API_URL + postId + "/saveandunsave",
+    data,
+    config
+  );
+
+  return res.data;
+};
+
 const postService = {
   getPostsFollowing,
   likePost,
+  savePost,
 };
 
 export default postService;

@@ -31,12 +31,7 @@ const uploadPost = asyncHandler(async (req, res) => {
       });
       await user.updateOne({ $push: { posts: newPost._id } });
 
-      res.status(201).json({
-        _id: newPost._id,
-        comments: newPost.comments,
-        likes: newPost.likes,
-        image: newPost.image,
-      });
+      res.status(201).json(newPost);
     } catch (error) {
       fs.unlinkSync(req.file.path);
       res.status(500);
@@ -49,7 +44,24 @@ const uploadPost = asyncHandler(async (req, res) => {
 // @route   GET /post/getAll
 // @access  PUBLIC
 const getAllPosts = asyncHandler(async (req, res) => {
-  const posts = await Post.find();
+  const limit = Number(req.query.limit) || 27;
+
+  const currentPage = Number(req.query.page) || 1;
+
+  const skipPost = limit * (currentPage - 1);
+
+  const posts = await Post.find()
+    .populate("postedBy likes", "_id username profilePicture")
+    .populate({
+      path: "comments",
+      populate: {
+        path: "user",
+        select: "_id username profilePicture",
+      },
+    })
+    .limit(limit)
+    .skip(skipPost)
+    .sort({ createdAt: -1 });
 
   res.status(200).json(posts);
 });
@@ -95,7 +107,7 @@ const getPostFollowing = asyncHandler(async (req, res) => {
   const postFollowing = await Post.find({
     postedBy: { $in: user.followings },
   })
-    .populate("postedBy likes", "_id username profilePicture")
+    .populate("postedBy likes savedBy", "_id username profilePicture")
     .populate({
       path: "comments",
       populate: {
@@ -234,13 +246,29 @@ const saveAndUnsave = asyncHandler(async (req, res) => {
 
     await user.updateOne({ $push: { saved: post._id } });
 
-    res.status(200).json({ message: "Saved succesfully" });
+    res.status(200).json({
+      id: req.params.postId,
+      user: {
+        _id: req.user._id,
+        username: req.user.username,
+        profilePicture: req.user.profilePicture,
+      },
+      message: "The post has been saved",
+    });
   } else {
     await post.updateOne({ $pull: { savedBy: req.user._id } });
 
     await user.updateOne({ $pull: { saved: post._id } });
 
-    res.status(200).json({ message: "Unsaved succesfully" });
+    res.status(200).json({
+      id: req.params.postId,
+      user: {
+        _id: req.user._id,
+        username: req.user.username,
+        profilePicture: req.user.profilePicture,
+      },
+      message: "The post has been Unsaved",
+    });
   }
 });
 

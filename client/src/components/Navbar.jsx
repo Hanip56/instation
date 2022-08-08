@@ -66,7 +66,7 @@ const Navbar = () => {
                 </button>
               </li>
               <li>
-                <Link to="">
+                <Link to="/explore">
                   <IoCompassOutline />
                 </Link>
               </li>

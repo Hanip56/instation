@@ -6,12 +6,14 @@ import {
   IoChatbubbleOutline,
   IoPaperPlaneOutline,
   IoBookmarkOutline,
+  IoBookmarkSharp,
 } from "react-icons/io5";
 import { VscSmiley } from "react-icons/vsc";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 import {
   likePostFollowing,
+  savePostFollowing,
   showModalPost,
 } from "../../features/post/postSlice";
 
@@ -23,8 +25,13 @@ const Card = ({ post }) => {
 
   const liked = post?.likes?.some((e) => e?._id === user?._id);
 
+  const saved = post?.savedBy?.some((e) => e?._id === user?._id);
+
   const handleLoves = () => {
     dispatch(likePostFollowing(post._id));
+  };
+  const handleSave = () => {
+    dispatch(savePostFollowing(post._id));
   };
 
   const handleShowModal = () => {
@@ -73,8 +80,9 @@ const Card = ({ post }) => {
             </button>
           </div>
           <div>
-            <button className="hover:text-black/40">
-              <IoBookmarkOutline />
+            <button className="hover:text-black/40" onClick={handleSave}>
+              {saved && <IoBookmarkSharp className="text-black" />}
+              {!saved && <IoBookmarkOutline className="hover:text-black/40" />}
             </button>
           </div>
         </div>

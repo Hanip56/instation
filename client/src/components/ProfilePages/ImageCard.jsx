@@ -1,8 +1,11 @@
 import React from "react";
 import { IoHeartSharp, IoChatbubbleSharp } from "react-icons/io5";
+import { useDispatch } from "react-redux";
+import { showModalPost } from "../../features/post/postSlice";
 
 const ImageCard = ({ post }) => {
-  console.log(post.likes.length);
+  const dispatch = useDispatch();
+
   return (
     <>
       <div className="group cursor-pointer relative">

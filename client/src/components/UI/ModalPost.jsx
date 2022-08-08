@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   hideModalPost,
   likePostFollowing,
+  savePostFollowing,
 } from "../../features/post/postSlice";
 import {
   IoHeartOutline,
@@ -12,6 +13,7 @@ import {
   IoChatbubbleOutline,
   IoPaperPlaneOutline,
   IoBookmarkOutline,
+  IoBookmarkSharp,
 } from "react-icons/io5";
 import { VscSmiley } from "react-icons/vsc";
 
@@ -23,10 +25,18 @@ const ModalPost = () => {
   const [liked, setLiked] = useState(
     currentPost?.likes?.some((e) => e?._id === user?._id)
   );
+  const [saved, setSaved] = useState(
+    currentPost?.savedBy?.some((e) => e?._id === user?._id)
+  );
   const [totalLikes, setTotalLikes] = useState(currentPost?.likes?.length);
 
   const handleHideModal = () => {
     dispatch(hideModalPost());
+  };
+
+  const handleSave = () => {
+    setSaved((prev) => !prev);
+    dispatch(savePostFollowing(currentPost?._id));
   };
 
   const handleLoves = () => {
@@ -42,6 +52,8 @@ const ModalPost = () => {
       }
     });
   };
+
+  console.log({ currentPost });
 
   return (
     <>
@@ -105,8 +117,14 @@ const ModalPost = () => {
                 <button className="hover:text-black/40">
                   <IoPaperPlaneOutline />
                 </button>
-                <button className="hover:text-black/40 ml-auto">
-                  <IoBookmarkOutline />
+                <button
+                  className="hover:text-black/40 ml-auto"
+                  onClick={handleSave}
+                >
+                  {saved && <IoBookmarkSharp className="text-black" />}
+                  {!saved && (
+                    <IoBookmarkOutline className="hover:text-black/40" />
+                  )}
                 </button>
               </div>
               <div>

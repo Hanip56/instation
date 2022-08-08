@@ -13,7 +13,6 @@ const getPersonalAccount = asyncHandler(async (req, res) => {
       })
       .populate({
         path: "saved posts",
-        select: "_id image comments likes",
       });
 
     res.status(200).json(user);
@@ -36,7 +35,6 @@ const getOneUser = asyncHandler(async (req, res) => {
     })
     .populate({
       path: "saved posts",
-      select: "_id image comments likes",
     });
 
   if (!user) {

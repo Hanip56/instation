@@ -45,15 +45,17 @@ const Home = () => {
         <aside className="hidden lg:block basis-2/5 w-full h-32 p-1">
           {/* account */}
           <div className="flex w-full h-20 gap-x-2 items-center justify-between">
-            <div className="flex items-center gap-x-4">
-              <div className="w-16 h-16 rounded-full overflow-hidden border border-gray-200">
-                <img src={user?.profilePicture} alt={user?.username} />
+            <Link to={`/${user?.username}`}>
+              <div className="flex items-center gap-x-4">
+                <div className="w-16 h-16 rounded-full overflow-hidden border border-gray-200">
+                  <img src={user?.profilePicture} alt={user?.username} />
+                </div>
+                <div>
+                  <h4 className="font-semibold">{user?.username}</h4>
+                  <p className="text-gray-500 text-sm">{user?.fullname}</p>
+                </div>
               </div>
-              <div>
-                <h4 className="font-semibold">{user?.username}</h4>
-                <p className="text-gray-500 text-sm">{user?.fullname}</p>
-              </div>
-            </div>
+            </Link>
             <button className="listBtn" onClick={handleLogout}>
               LOGOUT
             </button>
