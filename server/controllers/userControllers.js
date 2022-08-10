@@ -13,6 +13,13 @@ const getPersonalAccount = asyncHandler(async (req, res) => {
       })
       .populate({
         path: "saved posts",
+      })
+      .populate({
+        path: "saved posts",
+        populate: {
+          path: "postedBy likes savedBy",
+          select: "_id username profilePicture",
+        },
       });
 
     res.status(200).json(user);

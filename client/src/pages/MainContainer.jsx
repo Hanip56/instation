@@ -7,21 +7,24 @@ import Home from "./Home";
 import ProfilePages from "./ProfilePages";
 import { useEffect } from "react";
 import { getPersonalAccount } from "../features/auth/userSlice";
-import ModalPost from "../components/UI/ModalPost";
+import ModalPost from "../components/Home/ModalPost";
 import Explore from "./Explore";
+import { useDisableBodyScroll } from "../hooks/preventWindowScroll";
 
 const MainContainer = () => {
   const { showModal } = useSelector((state) => state.createPost);
   const { showModalPost } = useSelector((state) => state.postsFollowing);
-  const { user } = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(getPersonalAccount());
   }, [dispatch]);
 
+  useDisableBodyScroll(showModal);
+  useDisableBodyScroll(showModalPost.set);
+
   return (
-    <div className="bg-[#fafafa] min-h-screen">
+    <div className=" min-h-screen">
       {showModalPost.set && <ModalPost />}
       {showModal && <ModalCreate />}
       <Navbar />

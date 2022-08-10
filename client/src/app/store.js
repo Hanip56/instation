@@ -5,6 +5,7 @@ import {
   postsFollowingReducer,
   createPostSliceReducer,
 } from "../features/post/postSlice";
+import exploreReducer from "../features/explore/exploreSlice";
 
 console.log(postsFollowingReducer);
 
@@ -14,6 +15,7 @@ export const store = configureStore({
     user: userReducer,
     postsFollowing: postsFollowingReducer,
     createPost: createPostSliceReducer,
+    explore: exploreReducer,
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
 });

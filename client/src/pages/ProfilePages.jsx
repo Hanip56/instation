@@ -2,20 +2,29 @@ import axios from "axios";
 import React, { useRef } from "react";
 import { useEffect } from "react";
 import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import ImageCard from "../components/ProfilePages/ImageCard";
+import ModalPostPF from "../components/ProfilePages/ModalPostPF";
 import ModalTiny from "../components/UI/ModalTiny";
 import ToggleFollowUnfollow from "../components/UI/ToggleFollowUnfollow";
+import { getPersonalAccount, resetUser } from "../features/auth/userSlice";
 import { useDisableBodyScroll } from "../hooks/preventWindowScroll";
 
 const ProfilePages = () => {
   const params = useParams();
   const [showModal, setShowModal] = useState("");
-  const { user: ownUser } = useSelector((state) => state.user);
+  const [showModalPost, setShowModalPost] = useState({
+    set: false,
+    data: {},
+  });
+  const { user: ownUser, isSuccess: isSuccessUser } = useSelector(
+    (state) => state.user
+  );
   const { username } = params;
   const [otherUser, setOtherUser] = useState({});
   const [navigation, setNavigation] = useState("posts");
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -26,6 +35,16 @@ const ProfilePages = () => {
     };
     fetchUser();
   }, [username]);
+
+  useEffect(() => {
+    dispatch(getPersonalAccount());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (isSuccessUser) {
+      dispatch(resetUser());
+    }
+  }, [isSuccessUser, dispatch]);
 
   let user;
 
@@ -47,6 +66,15 @@ const ProfilePages = () => {
           followers={user?.followers}
           followings={user?.followings}
           setShowModal={setShowModal}
+        />
+      )}
+
+      {showModalPost.set && (
+        <ModalPostPF
+          post={showModalPost.data}
+          handleHideModal={() =>
+            setShowModalPost((prev) => ({ ...prev, set: false }))
+          }
         />
       )}
 
@@ -116,14 +144,22 @@ const ProfilePages = () => {
         {navigation === "posts" && (
           <div className="grid grid-cols-3 gap-4">
             {user?.posts?.map((post) => (
-              <ImageCard post={post} key={post?._id} />
+              <ImageCard
+                post={post}
+                key={post?._id}
+                setShowModalPost={setShowModalPost}
+              />
             ))}
           </div>
         )}
         {navigation === "saved" && (
           <div className="grid grid-cols-3 gap-4">
             {user?.saved?.map((post) => (
-              <ImageCard post={post} key={post?._id} />
+              <ImageCard
+                post={post}
+                key={post?._id}
+                setShowModalPost={setShowModalPost}
+              />
             ))}
           </div>
         )}

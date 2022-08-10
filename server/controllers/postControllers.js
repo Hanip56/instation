@@ -44,14 +44,14 @@ const uploadPost = asyncHandler(async (req, res) => {
 // @route   GET /post/getAll
 // @access  PUBLIC
 const getAllPosts = asyncHandler(async (req, res) => {
-  const limit = Number(req.query.limit) || 27;
+  const limit = Number(req.query.limit) || 15;
 
   const currentPage = Number(req.query.page) || 1;
 
   const skipPost = limit * (currentPage - 1);
 
   const posts = await Post.find()
-    .populate("postedBy likes", "_id username profilePicture")
+    .populate("postedBy likes savedBy", "_id username profilePicture")
     .populate({
       path: "comments",
       populate: {
@@ -227,11 +227,26 @@ const addComment = asyncHandler(async (req, res) => {
     throw new Error("Comment cant be empty");
   }
 
-  await post.updateOne({
-    $push: { comments: { user: req.user._id, comment: req.body.comment } },
-  });
+  try {
+    await post.updateOne({
+      $push: { comments: { user: req.user._id, comment: req.body.comment } },
+    });
 
-  res.status(200).json({ message: "Comment added" });
+    const data = {
+      id: req.params.postId,
+      user: {
+        _id: req.user._id,
+        username: req.user.username,
+        profilePicture: req.user.profilePicture,
+      },
+      comment: req.body.comment,
+    };
+
+    res.status(200).json({ data, message: "Comment added" });
+  } catch (error) {
+    res.status(500);
+    throw new Error(error.message);
+  }
 });
 
 // @desc    save and unsave post

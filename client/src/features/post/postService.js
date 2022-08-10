@@ -48,10 +48,30 @@ const savePost = async (postId, token) => {
   return res.data;
 };
 
+const addComment = async (data, token) => {
+  console.log({ dataFromService: data });
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  const res = await axios.put(
+    API_URL + data.postId + "/addcomment",
+    { comment: data.comment },
+    config
+  );
+
+  console.log({ res });
+
+  return res.data;
+};
+
 const postService = {
   getPostsFollowing,
   likePost,
   savePost,
+  addComment,
 };
 
 export default postService;

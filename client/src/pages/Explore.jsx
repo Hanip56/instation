@@ -1,31 +1,49 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import ModalPostEx from "../components/Explore/ModalPostEx";
 import ImageCard from "../components/ProfilePages/ImageCard";
+import { getAllPosts } from "../features/explore/exploreSlice";
+import { useDisableBodyScroll } from "../hooks/preventWindowScroll";
 
 const Explore = () => {
-  const [posts, setPosts] = useState([]);
+  const dispatch = useDispatch();
+  const { posts } = useSelector((state) => state.explore);
+  const [showModalEx, setShowModalEx] = useState({
+    set: false,
+    data: {},
+  });
 
   useEffect(() => {
-    const fetchPosts = async () => {
-      const res = await axios.get("/api/post/all");
+    dispatch(getAllPosts());
+  }, [dispatch]);
 
-      setPosts(res.data);
-    };
-    fetchPosts();
-  }, []);
-
-  console.log(posts);
+  useDisableBodyScroll(showModalEx.set);
 
   return (
-    <div className="w-full">
-      <main className="grid grid-cols-3 gap-4">
-        {posts?.map((post) => (
-          <ImageCard post={post} key={post?._id} />
-        ))}
-      </main>
-      <footer></footer>
-    </div>
+    <>
+      {showModalEx.set && (
+        <ModalPostEx
+          post={showModalEx.data}
+          handleHideModal={() =>
+            setShowModalEx((prev) => ({ ...prev, set: false }))
+          }
+        />
+      )}
+      <div className="w-full">
+        <main className="grid grid-cols-3 gap-4">
+          {posts?.map((post) => (
+            <ImageCard
+              post={post}
+              key={post?._id}
+              setShowModalPost={setShowModalEx}
+            />
+          ))}
+        </main>
+        <footer></footer>
+      </div>
+    </>
   );
 };
 

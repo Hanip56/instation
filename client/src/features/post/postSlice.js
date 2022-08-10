@@ -71,6 +71,25 @@ export const savePostFollowing = createAsyncThunk(
   }
 );
 
+export const addComment = createAsyncThunk(
+  "post/addcomment",
+  async (data, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.token.token;
+      return await postService.addComment(data, token);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 const postsFollowingSlice = createSlice({
   name: "postsFollowing",
   initialState: initialStatePF,
@@ -151,6 +170,19 @@ const postsFollowingSlice = createSlice({
             action.payload.user
           );
         }
+      })
+      .addCase(addComment.fulfilled, (state, action) => {
+        const posts = current(state);
+        // const filteredPosts = posts.postsFollowing.posts?.filter(
+        //   (post) => post._id.toString() === action.payload.id.toString()
+        // );
+        const filteredPostsIndex = posts?.postsFollowing?.posts?.findIndex(
+          (post) => post?._id?.toString() === action.payload.data.id?.toString()
+        );
+
+        state.postsFollowing.posts[filteredPostsIndex]?.comments?.push(
+          action.payload.data
+        );
       });
   },
 });
