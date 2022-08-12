@@ -7,7 +7,7 @@ function App() {
   const { token } = useSelector((state) => state.auth);
 
   return (
-    <div className="App ">
+    <div className="App">
       <ScrollToTop />
       {token ? <MainContainer /> : <StarterContainer />}
     </div>

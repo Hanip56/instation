@@ -3,21 +3,59 @@ import Card from "../components/Home/Card";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { getPostsFollowing } from "../features/post/postSlice";
 import { logout } from "../features/auth/authSlice";
 import Spinner from "../components/UI/Spinner";
 import { resetUser } from "../features/auth/userSlice";
+import {
+  getPostsFollowing,
+  reGetPostsFollowing,
+  resetPostList,
+} from "../features/postList/postListSlice";
+import { useState } from "react";
 
 const Home = () => {
   const dispatch = useDispatch();
   const { user, isSuccess: isSuccessUser } = useSelector((state) => state.user);
-  const { postsFollowing, isLoading: isLoadingPF } = useSelector(
-    (state) => state.postsFollowing
-  );
+  const [currentPage, setCurrentPage] = useState(2);
+  const {
+    postList,
+    isLoading: isLoadingPF,
+    reGetIsLoading,
+    maxPages,
+  } = useSelector((state) => state.postList);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const maxScrollY =
+        document.documentElement.scrollHeight -
+        document.documentElement.clientHeight;
+
+      console.log({ currentPage });
+      console.log(maxPages);
+      if (
+        window.scrollY >= maxScrollY &&
+        !reGetIsLoading &&
+        currentPage <= maxPages
+      ) {
+        dispatch(reGetPostsFollowing(currentPage));
+        setCurrentPage((prev) => prev + 1);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [currentPage, dispatch, reGetIsLoading, maxPages]);
 
   useEffect(() => {
     dispatch(getPostsFollowing());
-  }, []);
+
+    return () => {
+      dispatch(resetPostList());
+    };
+  }, [dispatch]);
 
   useEffect(() => {
     if (isSuccessUser) {
@@ -32,15 +70,19 @@ const Home = () => {
   return (
     <>
       <div className="w-full flex justify-between gap-x-5">
-        <div className="flex-1 w-full h-32 flex flex-col gap-y-4">
+        <div className="flex-1 w-full flex flex-col gap-y-4 pb-20">
           {isLoadingPF && <Spinner />}
-          {!isLoadingPF && postsFollowing.posts?.length < 1 && (
+          {!isLoadingPF && postList?.length < 1 && (
             <h1>There's no post, Let's Follow someone!!</h1>
           )}
-          {!isLoadingPF &&
-            postsFollowing.posts?.map((post) => (
-              <Card post={post} key={post._id} />
-            ))}
+          {!isLoadingPF && (
+            <>
+              {postList?.map((post) => (
+                <Card post={post} key={post._id} />
+              ))}
+              {reGetIsLoading && <Spinner />}
+            </>
+          )}
         </div>
         <aside className="hidden lg:block basis-2/5 w-full h-32 p-1">
           {/* account */}

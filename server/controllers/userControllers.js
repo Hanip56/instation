@@ -1,5 +1,7 @@
 const User = require("../models/User");
 const asyncHandler = require("express-async-handler");
+const uploadImg = require("../utils/uploadImg");
+const multer = require("multer");
 
 // @desc    get personal account info
 // @route   GET /api/user/:userId
@@ -19,6 +21,16 @@ const getPersonalAccount = asyncHandler(async (req, res) => {
         populate: {
           path: "postedBy likes savedBy",
           select: "_id username profilePicture",
+        },
+      })
+      .populate({
+        path: "saved posts",
+        populate: {
+          path: "comments",
+          populate: {
+            path: "user",
+            select: "_id username profilePicture",
+          },
         },
       });
 
@@ -42,6 +54,23 @@ const getOneUser = asyncHandler(async (req, res) => {
     })
     .populate({
       path: "saved posts",
+    })
+    .populate({
+      path: "saved posts",
+      populate: {
+        path: "postedBy likes savedBy",
+        select: "_id username profilePicture",
+      },
+    })
+    .populate({
+      path: "saved posts",
+      populate: {
+        path: "comments",
+        populate: {
+          path: "user",
+          select: "_id username profilePicture",
+        },
+      },
     });
 
   if (!user) {
@@ -70,11 +99,16 @@ const updateUser = asyncHandler(async (req, res) => {
     throw new Error("You just can update your account");
   }
 
-  const updatedUser = await User.findByIdAndUpdate(req.user._id, req.body, {
-    new: true,
-  });
+  try {
+    const updatedUser = await User.findByIdAndUpdate(req.user._id, req.body, {
+      new: true,
+    });
 
-  res.status(201).json(updatedUser);
+    res.status(201).json(updatedUser);
+  } catch (error) {
+    res.status(500);
+    throw new Error(error.message);
+  }
 });
 
 // @desc    delete one user
@@ -155,6 +189,36 @@ const unfollowUser = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc    update profile picture
+// @route   PUT /:userId/profilepicture
+// @access  PRIVATE
+const updateProfilePicture = asyncHandler(async (req, res) => {
+  uploadImg(req, res, async function (err) {
+    if (err instanceof multer.MulterError || err) {
+      res.status(500);
+      throw new Error(err.message);
+    }
+
+    if (req.file === undefined) {
+      res.status(400);
+      throw new Error("Error no file selected");
+      // An unknown error occurred when uploading.
+    }
+
+    try {
+      const user = await User.findById(req.user._id);
+      await user.updateOne({ profilePicture: req.file.filename });
+      const updatedUser = await user.save();
+
+      res.status(201).json(req.file.filename);
+    } catch (error) {
+      fs.unlinkSync(req.file.path);
+      res.status(500);
+      throw new Error(error.message);
+    }
+  });
+});
+
 module.exports = {
   getPersonalAccount,
   getOneUser,
@@ -163,4 +227,5 @@ module.exports = {
   deleteUser,
   followUser,
   unfollowUser,
+  updateProfilePicture,
 };

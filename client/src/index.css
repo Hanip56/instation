@@ -24,4 +24,14 @@
   .boxList {
     @apply flex items-center gap-x-2 p-3 w-full hover:bg-[#fafafa];
   }
+  .formControl {
+    @apply w-full flex gap-x-6;
+  }
+  .formControl label {
+    @apply font-semibold w-32 text-right;
+  }
+  .formControl input,
+  .formControl textarea {
+    @apply border w-80 border-gray-500/50 rounded-sm indent-2 placeholder:text-sm outline-none;
+  }
 }

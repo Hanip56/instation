@@ -14,10 +14,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import {
   addComment,
-  likePostFollowing,
-  savePostFollowing,
-  showModalPost,
-} from "../../features/post/postSlice";
+  likePost,
+  savePost,
+  showModalPostList,
+  showModalThreeDots,
+} from "../../features/postList/postListSlice";
 import { get_time_diff } from "../../utils/getTimeDiff";
 
 const Card = ({ post }) => {
@@ -32,10 +33,10 @@ const Card = ({ post }) => {
   const isCommented = post?.comments?.filter((e) => e?.user?._id === user?._id);
 
   const handleLoves = () => {
-    dispatch(likePostFollowing(post._id));
+    dispatch(likePost(post._id));
   };
   const handleSave = () => {
-    dispatch(savePostFollowing(post._id));
+    dispatch(savePost(post._id));
   };
 
   const handleSubmitComment = (e) => {
@@ -50,8 +51,13 @@ const Card = ({ post }) => {
   };
 
   const handleShowModal = () => {
-    dispatch(showModalPost(post));
+    dispatch(showModalPostList(post));
   };
+
+  const handleShowModalThreeDots = () => {
+    dispatch(showModalThreeDots(post));
+  };
+
   const postDate = new Date(post?.createdAt);
 
   const currentPostDate = get_time_diff(postDate);
@@ -74,7 +80,10 @@ const Card = ({ post }) => {
             </div>
           </div>
         </Link>
-        <div className="flex justify-center items-center mr-2">
+        <div
+          className="flex justify-center items-center mr-2 cursor-pointer"
+          onClick={handleShowModalThreeDots}
+        >
           <BsThreeDots />
         </div>
       </header>

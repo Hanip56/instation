@@ -8,11 +8,13 @@ import {
   IoHeartSharp,
   IoBookmarkOutline,
   IoSettingsOutline,
+  IoHomeOutline,
+  IoHomeSharp,
 } from "react-icons/io5";
 import { CgProfile } from "react-icons/cg";
 import { IoIosAddCircleOutline } from "react-icons/io";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { showModalCP } from "../features/post/postSlice";
 import { useState } from "react";
 import useOutsideAlerter from "../utils/ClickOutside";
@@ -51,14 +53,16 @@ const Navbar = () => {
           <div>
             <ul className="ml-4 flex gap-x-4 text-2xl items-center">
               <li>
-                <Link to="/">
-                  <HiHome />
-                </Link>
+                <NavLink to="/">
+                  {({ isActive }) =>
+                    isActive ? <IoHomeSharp /> : <IoHomeOutline />
+                  }
+                </NavLink>
               </li>
               <li>
-                <Link to="">
+                <NavLink to="">
                   <IoPaperPlaneOutline />
-                </Link>
+                </NavLink>
               </li>
               <li>
                 <button onClick={handleShowModal}>
@@ -66,14 +70,16 @@ const Navbar = () => {
                 </button>
               </li>
               <li>
-                <Link to="/explore">
-                  <IoCompassOutline />
-                </Link>
+                <NavLink to="/explore">
+                  {({ isActive }) =>
+                    isActive ? <IoCompassSharp /> : <IoCompassOutline />
+                  }
+                </NavLink>
               </li>
               <li>
-                <Link to="">
+                <NavLink to="">
                   <IoHeartOutline />
-                </Link>
+                </NavLink>
               </li>
               <li
                 className={`relative cursor-pointer border  ${
@@ -87,7 +93,7 @@ const Navbar = () => {
                   <img
                     src={user?.profilePicture}
                     alt={user?.username}
-                    className="object-contain w-full h-full object-center"
+                    className="object-cover w-full h-full object-center"
                   />
                 </div>
                 {showBoxList && (
@@ -96,12 +102,12 @@ const Navbar = () => {
                     className="absolute text-sm -right-2 w-44 rounded-md bg-white shadow-black/40 shadow-md"
                   >
                     <ul>
-                      <Link to={`/${user?.username}`}>
+                      <NavLink to={`/${user?.username}`}>
                         <li className="boxList">
                           <CgProfile />
                           <p>Profile</p>
                         </li>
-                      </Link>
+                      </NavLink>
                       <li className="boxList">
                         <IoBookmarkOutline />
                         <p>Saved</p>

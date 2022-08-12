@@ -1,21 +1,17 @@
 import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "../features/auth/authSlice";
 import userReducer from "../features/auth/userSlice";
-import {
-  postsFollowingReducer,
-  createPostSliceReducer,
-} from "../features/post/postSlice";
-import exploreReducer from "../features/explore/exploreSlice";
-
-console.log(postsFollowingReducer);
+import { createPostSliceReducer } from "../features/post/postSlice";
+import profileReducer from "../features/profile/profileSlice";
+import postListReducer from "../features/postList/postListSlice";
 
 export const store = configureStore({
   reducer: {
     auth: authReducer,
     user: userReducer,
-    postsFollowing: postsFollowingReducer,
     createPost: createPostSliceReducer,
-    explore: exploreReducer,
+    profile: profileReducer,
+    postList: postListReducer,
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
 });

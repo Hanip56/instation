@@ -7,13 +7,17 @@ import Home from "./Home";
 import ProfilePages from "./ProfilePages";
 import { useEffect } from "react";
 import { getPersonalAccount } from "../features/auth/userSlice";
-import ModalPost from "../components/Home/ModalPost";
+import ModalPost from "../components/Modal/ModalPost";
 import Explore from "./Explore";
 import { useDisableBodyScroll } from "../hooks/preventWindowScroll";
+import EditProfile from "./EditProfile";
+import ModalThreeDots from "../components/Modal/ModalThreeDots";
 
 const MainContainer = () => {
   const { showModal } = useSelector((state) => state.createPost);
-  const { showModalPost } = useSelector((state) => state.postsFollowing);
+  const { showModalPostList, showModalThreeDots } = useSelector(
+    (state) => state.postList
+  );
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -21,17 +25,21 @@ const MainContainer = () => {
   }, [dispatch]);
 
   useDisableBodyScroll(showModal);
-  useDisableBodyScroll(showModalPost.set);
+  useDisableBodyScroll(showModalPostList.set);
+  useDisableBodyScroll(showModalThreeDots.set);
 
   return (
     <div className=" min-h-screen">
-      {showModalPost.set && <ModalPost />}
+      {showModalPostList.set && <ModalPost />}
+      {showModalThreeDots.set && <ModalThreeDots />}
       {showModal && <ModalCreate />}
+
       <Navbar />
       <main className="pt-20 p-2 max-w-4xl mx-auto">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<h1>About</h1>} />
+          <Route path="/edit" element={<EditProfile />} />
           <Route path="/:username" element={<ProfilePages />} />
           <Route path="/explore" element={<Explore />} />
           <Route path="/signin" element={<Navigate to="/" replace />} />

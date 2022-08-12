@@ -87,6 +87,46 @@ export const unfollowUser = createAsyncThunk(
   }
 );
 
+export const updateUser = createAsyncThunk(
+  "user/updateuser",
+  async (data, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.token.token;
+      const userId = thunkAPI.getState().user.user._id;
+      return await userService.updateUser(userId, data, token);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const updateProfilePicture = createAsyncThunk(
+  "user/updateprofilepicture",
+  async (data, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.token.token;
+      const userId = thunkAPI.getState().user.user._id;
+      return await userService.updateProfilePicture(userId, data, token);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 const userSlice = createSlice({
   name: "user",
   initialState: initialStateUser,
@@ -118,7 +158,6 @@ const userSlice = createSlice({
       .addCase(createPost.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
-        console.log(action.payload);
         state.user.posts.push(action.payload);
       })
       .addCase(createPost.rejected, (state, action) => {
@@ -136,6 +175,27 @@ const userSlice = createSlice({
       })
       .addCase(unfollowUser.rejected, (state, action) => {
         state.message = action.payload;
+      })
+      .addCase(updateUser.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(updateUser.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.user = action.payload;
+      })
+      .addCase(updateUser.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
+      .addCase(updateProfilePicture.pending, (state, action) => {
+        state.isLoading = true;
+      })
+      .addCase(updateProfilePicture.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.user.profilePicture = action.payload;
       });
   },
 });

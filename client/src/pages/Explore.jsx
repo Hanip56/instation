@@ -1,47 +1,32 @@
-import axios from "axios";
-import React, { useState } from "react";
+import React from "react";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import ModalPostEx from "../components/Explore/ModalPostEx";
+import Footer from "../components/Footer";
 import ImageCard from "../components/ProfilePages/ImageCard";
-import { getAllPosts } from "../features/explore/exploreSlice";
-import { useDisableBodyScroll } from "../hooks/preventWindowScroll";
+import Spinner from "../components/UI/Spinner";
+import { getAllPosts, resetPostList } from "../features/postList/postListSlice";
 
 const Explore = () => {
   const dispatch = useDispatch();
-  const { posts } = useSelector((state) => state.explore);
-  const [showModalEx, setShowModalEx] = useState({
-    set: false,
-    data: {},
-  });
+  const { postList, isLoading } = useSelector((state) => state.postList);
 
   useEffect(() => {
     dispatch(getAllPosts());
-  }, [dispatch]);
 
-  useDisableBodyScroll(showModalEx.set);
+    return () => {
+      dispatch(resetPostList());
+    };
+  }, [dispatch]);
 
   return (
     <>
-      {showModalEx.set && (
-        <ModalPostEx
-          post={showModalEx.data}
-          handleHideModal={() =>
-            setShowModalEx((prev) => ({ ...prev, set: false }))
-          }
-        />
-      )}
       <div className="w-full">
+        {isLoading && <Spinner />}
         <main className="grid grid-cols-3 gap-4">
-          {posts?.map((post) => (
-            <ImageCard
-              post={post}
-              key={post?._id}
-              setShowModalPost={setShowModalEx}
-            />
-          ))}
+          {!isLoading &&
+            postList?.map((post) => <ImageCard post={post} key={post?._id} />)}
         </main>
-        <footer></footer>
+        <Footer />
       </div>
     </>
   );

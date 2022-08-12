@@ -54,11 +54,41 @@ const createPost = async (data, token) => {
   return res.data;
 };
 
+const updateUser = async (userId, data, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  const res = await axios.put(API_URL + userId, data, config);
+
+  return res.data;
+};
+
+const updateProfilePicture = async (userId, data, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  const res = await axios.put(
+    API_URL + userId + "/profilePicture",
+    data,
+    config
+  );
+
+  return res.data;
+};
+
 const userService = {
   createPost,
   getPersonalAccount,
   followUser,
   unfollowUser,
+  updateUser,
+  updateProfilePicture,
 };
 
 export default userService;

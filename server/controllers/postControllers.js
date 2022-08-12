@@ -104,6 +104,8 @@ const getPostFollowing = asyncHandler(async (req, res) => {
     postedBy: { $in: user.followings },
   }).countDocuments();
 
+  const maxPages = Math.ceil(totalPosts / limit);
+
   const postFollowing = await Post.find({
     postedBy: { $in: user.followings },
   })
@@ -119,7 +121,7 @@ const getPostFollowing = asyncHandler(async (req, res) => {
     .limit(limit)
     .skip(skipPost);
 
-  res.status(200).json({ posts: postFollowing, totalPosts });
+  res.status(200).json({ posts: postFollowing, totalPosts, maxPages });
 });
 
 // @desc    like and unlike post

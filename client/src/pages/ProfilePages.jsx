@@ -1,44 +1,34 @@
-import axios from "axios";
-import React, { useRef } from "react";
+import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import ImageCard from "../components/ProfilePages/ImageCard";
-import ModalPostPF from "../components/ProfilePages/ModalPostPF";
 import ModalTiny from "../components/UI/ModalTiny";
 import ToggleFollowUnfollow from "../components/UI/ToggleFollowUnfollow";
-import { getPersonalAccount, resetUser } from "../features/auth/userSlice";
+import { resetUser } from "../features/auth/userSlice";
+import {
+  resetPostList,
+  setPostListSync,
+} from "../features/postList/postListSlice";
+import { getProfileInfo } from "../features/profile/profileSlice";
 import { useDisableBodyScroll } from "../hooks/preventWindowScroll";
 
 const ProfilePages = () => {
   const params = useParams();
   const [showModal, setShowModal] = useState("");
-  const [showModalPost, setShowModalPost] = useState({
-    set: false,
-    data: {},
-  });
   const { user: ownUser, isSuccess: isSuccessUser } = useSelector(
     (state) => state.user
   );
+  const { postList } = useSelector((state) => state.postList);
+  const { info } = useSelector((state) => state.profile);
   const { username } = params;
-  const [otherUser, setOtherUser] = useState({});
   const [navigation, setNavigation] = useState("posts");
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const fetchUser = async () => {
-      const res = await axios.get("/api/user/" + username);
-
-      console.log(res.data);
-      setOtherUser(res.data);
-    };
-    fetchUser();
-  }, [username]);
-
-  useEffect(() => {
-    dispatch(getPersonalAccount());
-  }, [dispatch]);
+    dispatch(getProfileInfo(username));
+  }, [dispatch, username]);
 
   useEffect(() => {
     if (isSuccessUser) {
@@ -46,15 +36,21 @@ const ProfilePages = () => {
     }
   }, [isSuccessUser, dispatch]);
 
-  let user;
+  let user = info;
+
+  useEffect(() => {
+    let payload;
+
+    navigation === "posts" ? (payload = user?.posts) : (payload = user?.saved);
+
+    dispatch(setPostListSync(payload));
+
+    return () => {
+      dispatch(resetPostList());
+    };
+  }, [navigation, dispatch, user?.posts, user?.saved]);
 
   const isOwnProfile = username === ownUser?.username;
-
-  if (isOwnProfile) {
-    user = ownUser;
-  } else {
-    user = otherUser;
-  }
 
   useDisableBodyScroll(showModal);
 
@@ -66,15 +62,6 @@ const ProfilePages = () => {
           followers={user?.followers}
           followings={user?.followings}
           setShowModal={setShowModal}
-        />
-      )}
-
-      {showModalPost.set && (
-        <ModalPostPF
-          post={showModalPost.data}
-          handleHideModal={() =>
-            setShowModalPost((prev) => ({ ...prev, set: false }))
-          }
         />
       )}
 
@@ -92,6 +79,13 @@ const ProfilePages = () => {
               <h2 className="text-4xl font-light">{user?.username}</h2>
 
               {!isOwnProfile && <ToggleFollowUnfollow following={user} />}
+              {isOwnProfile && (
+                <Link to="/edit" className="ml-auto">
+                  <button className="px-3 py-1 border border-gray-300 font-semibold text-sm outline-none active:bg-gray-500/10">
+                    Edit Profile
+                  </button>
+                </Link>
+              )}
             </div>
             <div className="flex w-full justify-between">
               <p>
@@ -116,6 +110,7 @@ const ProfilePages = () => {
               </p>
             </div>
             <h3 className="font-semibold text-xl">{user?.fullname}</h3>
+            <p>{user?.porfileBio}</p>
           </div>
         </div>
 
@@ -140,29 +135,11 @@ const ProfilePages = () => {
           </ul>
         </div>
 
-        {/* posts or saved */}
-        {navigation === "posts" && (
-          <div className="grid grid-cols-3 gap-4">
-            {user?.posts?.map((post) => (
-              <ImageCard
-                post={post}
-                key={post?._id}
-                setShowModalPost={setShowModalPost}
-              />
-            ))}
-          </div>
-        )}
-        {navigation === "saved" && (
-          <div className="grid grid-cols-3 gap-4">
-            {user?.saved?.map((post) => (
-              <ImageCard
-                post={post}
-                key={post?._id}
-                setShowModalPost={setShowModalPost}
-              />
-            ))}
-          </div>
-        )}
+        <div className="grid grid-cols-3 gap-4">
+          {postList?.map((post) => (
+            <ImageCard post={post} key={post?._id} />
+          ))}
+        </div>
       </div>
     </>
   );
