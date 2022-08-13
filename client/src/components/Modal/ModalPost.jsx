@@ -16,6 +16,7 @@ import {
 } from "react-icons/io5";
 import { VscSmiley } from "react-icons/vsc";
 import { followUser, unfollowUser } from "../../features/auth/userSlice";
+import { Link } from "react-router-dom";
 
 const ModalPost = () => {
   const dispatch = useDispatch();
@@ -99,36 +100,40 @@ const ModalPost = () => {
           </div>
           <div className="flex-1 flex flex-col">
             <header className="flex py-2 px-4 gap-x-2 border border-transparent border-b-gray-200">
-              <div className="w-8 h-8 rounded-full overflow-hidden">
-                <img
-                  src={currentPost?.postedBy?.profilePicture}
-                  alt={currentPost?.postedBy?.username}
-                />
-              </div>
-              <div>
-                <h4 className="font-semibold">
-                  {currentPost?.postedBy?.username}
-                  {!isFollowed && !isOwnUser ? (
-                    <span
-                      className="text-xs text-blue-ig cursor-pointer"
-                      onClick={handleFollow}
-                    >
-                      {" "}
-                      . Follow
-                    </span>
-                  ) : (
-                    !isOwnUser && (
+              <Link to={`/${currentPost?.postedBy?.username}`}>
+                <div className="w-8 h-8 rounded-full overflow-hidden">
+                  <img
+                    src={currentPost?.postedBy?.profilePicture}
+                    alt={currentPost?.postedBy?.username}
+                  />
+                </div>
+              </Link>
+              <Link to={`/${currentPost?.postedBy?.username}`}>
+                <div>
+                  <h4 className="font-semibold">
+                    {currentPost?.postedBy?.username}
+                    {!isFollowed && !isOwnUser ? (
                       <span
-                        className="text-xs cursor-pointer"
-                        onClick={handleUnfollow}
+                        className="text-xs text-blue-ig cursor-pointer"
+                        onClick={handleFollow}
                       >
                         {" "}
-                        . Following
+                        . Follow
                       </span>
-                    )
-                  )}
-                </h4>
-              </div>
+                    ) : (
+                      !isOwnUser && (
+                        <span
+                          className="text-xs cursor-pointer"
+                          onClick={handleUnfollow}
+                        >
+                          {" "}
+                          . Following
+                        </span>
+                      )
+                    )}
+                  </h4>
+                </div>
+              </Link>
             </header>
             <main className="p-2 px-4 flex-1 border border-transparent border-b-gray-200">
               <div className="flex gap-x-4">
@@ -151,12 +156,14 @@ const ModalPost = () => {
               <div className="space-y-4 mt-6 max-h-[26rem] overflow-y-scroll">
                 {currentPost?.comments?.map((comment) => (
                   <div className="flex gap-x-4" key={comment._id}>
-                    <div className="w-8 h-8 rounded-full overflow-hidden">
-                      <img
-                        src={comment?.user?.profilePicture}
-                        alt={comment?.user?.username}
-                      />
-                    </div>
+                    <Link to={`/${comment?.user?.username}`}>
+                      <div className="w-8 h-8 rounded-full overflow-hidden">
+                        <img
+                          src={comment?.user?.profilePicture}
+                          alt={comment?.user?.username}
+                        />
+                      </div>
+                    </Link>
                     <div>
                       <p>
                         <span className="font-semibold">

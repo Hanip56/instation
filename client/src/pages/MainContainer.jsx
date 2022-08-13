@@ -1,22 +1,26 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Navigate, Route, Routes } from "react-router-dom";
-import ModalCreate from "../components/UI/ModalCreate";
+import ModalCreate from "../components/Modal/ModalCreate";
 import Navbar from "../components/Navbar";
 import Home from "./Home";
 import ProfilePages from "./ProfilePages";
 import { useEffect } from "react";
-import { getPersonalAccount } from "../features/auth/userSlice";
+import { getPersonalAccount, resetUser } from "../features/auth/userSlice";
 import ModalPost from "../components/Modal/ModalPost";
 import Explore from "./Explore";
 import { useDisableBodyScroll } from "../hooks/preventWindowScroll";
 import EditProfile from "./EditProfile";
 import ModalThreeDots from "../components/Modal/ModalThreeDots";
+import { toast } from "react-toastify";
 
 const MainContainer = () => {
   const { showModal } = useSelector((state) => state.createPost);
   const { showModalPostList, showModalThreeDots } = useSelector(
     (state) => state.postList
+  );
+  const { stateCreatePost, isError, message } = useSelector(
+    (state) => state.user
   );
   const dispatch = useDispatch();
 
@@ -27,6 +31,22 @@ const MainContainer = () => {
   useDisableBodyScroll(showModal);
   useDisableBodyScroll(showModalPostList.set);
   useDisableBodyScroll(showModalThreeDots.set);
+
+  useEffect(() => {
+    dispatch(resetUser());
+  }, [isError, dispatch]);
+
+  useEffect(() => {
+    if (stateCreatePost) {
+      toast.success("succes");
+    }
+  }, [stateCreatePost]);
+
+  useEffect(() => {
+    if (isError) {
+      toast.error(message);
+    }
+  }, [isError, message]);
 
   return (
     <div className=" min-h-screen">

@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { createPost } from "../../features/auth/userSlice";
 import { hideModalCP, resetCP } from "../../features/post/postSlice";
-import Spinner from "./Spinner";
+import Spinner from "../UI/Spinner";
 
 const ModalCreate = () => {
   const [caption, setCaption] = useState("");

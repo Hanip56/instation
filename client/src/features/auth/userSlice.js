@@ -3,6 +3,8 @@ import userService from "./userService";
 
 const initialStateUser = {
   user: {},
+  stateCreatePost: false,
+  stateUpdateUser: false,
   isLoading: false,
   isSuccess: false,
   isError: false,
@@ -133,6 +135,8 @@ const userSlice = createSlice({
   reducers: {
     resetUser: (state) => {
       state.isSuccess = false;
+      state.stateCreatePost = false;
+      state.stateUpdateUser = false;
       state.isError = false;
       state.isLoading = false;
       state.message = "";
@@ -157,6 +161,7 @@ const userSlice = createSlice({
       })
       .addCase(createPost.fulfilled, (state, action) => {
         state.isLoading = false;
+        state.stateCreatePost = true;
         state.isSuccess = true;
         state.user.posts.push(action.payload);
       })
@@ -182,6 +187,7 @@ const userSlice = createSlice({
       .addCase(updateUser.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
+        state.stateUpdateUser = true;
         state.user = action.payload;
       })
       .addCase(updateUser.rejected, (state, action) => {

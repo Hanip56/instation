@@ -75,6 +75,24 @@ export const getAllPosts = createAsyncThunk(
     }
   }
 );
+export const reGetAllPosts = createAsyncThunk(
+  "explore/reGetAllpost",
+  async (page, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.token.token;
+      return await postListService.getAllPosts(page, token);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
 
 export const likePost = createAsyncThunk(
   "postList/likeandunlike",
@@ -143,6 +161,8 @@ const postListSlice = createSlice({
         set: false,
         data: {},
       };
+      state.maxPages = 1;
+      state.reGetIsLoading = false;
       state.isLoading = false;
       state.isError = false;
       state.isSuccess = false;
@@ -201,13 +221,21 @@ const postListSlice = createSlice({
         state.reGetIsLoading = false;
         state.postList = [...state.postList, ...action.payload.posts];
       })
+      .addCase(reGetAllPosts.pending, (state) => {
+        state.reGetIsLoading = true;
+      })
+      .addCase(reGetAllPosts.fulfilled, (state, action) => {
+        state.reGetIsLoading = false;
+        state.postList = [...state.postList, ...action.payload.posts];
+      })
       .addCase(getAllPosts.pending, (state) => {
         state.isLoading = true;
       })
       .addCase(getAllPosts.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
-        state.postList = action.payload;
+        state.postList = action.payload.posts;
+        state.maxPages = action.payload.maxPages;
       })
       .addCase(getAllPosts.rejected, (state, action) => {
         state.isLoading = false;

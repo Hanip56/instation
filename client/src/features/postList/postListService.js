@@ -26,8 +26,10 @@ const reGetPostsFollowing = async (page, token) => {
   return res.data;
 };
 
-const getAllPosts = async () => {
-  const res = await axios.get(API_URL + "all");
+const getAllPosts = async (page) => {
+  let currentPage = page || 1;
+
+  const res = await axios.get(API_URL + `all?page=${currentPage}`);
 
   return res.data;
 };

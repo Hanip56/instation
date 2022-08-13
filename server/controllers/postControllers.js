@@ -4,21 +4,23 @@ const Post = require("../models/Post");
 const multer = require("multer");
 const uploadImg = require("../utils/uploadImg");
 const fs = require("fs");
+const catchAsync = require("../middleware/catchAsync");
+const ErrorHandler = require("../utils/errorHandler");
 const fsPromises = require("fs").promises;
 
 // @desc    upload post
 // @route   POST /post/add
 // @access  PRIVATE
-const uploadPost = asyncHandler(async (req, res) => {
+const uploadPost = asyncHandler(async (req, res, next) => {
   uploadImg(req, res, async function (err) {
     if (err instanceof multer.MulterError || err) {
-      res.status(500);
-      throw new Error(err.message);
+      res.status(400);
+      return next(new ErrorHandler(err.message, 400));
     }
 
     if (req.file === undefined) {
       res.status(400);
-      throw new Error("Error no file selected");
+      return next(new ErrorHandler("Error no file selected", 400));
       // An unknown error occurred when uploading.
     }
 
@@ -33,9 +35,9 @@ const uploadPost = asyncHandler(async (req, res) => {
 
       res.status(201).json(newPost);
     } catch (error) {
-      fs.unlinkSync(req.file.path);
+      fs.unlinkSync(req?.file?.path);
       res.status(500);
-      throw new Error(error.message);
+      return next(new ErrorHandler(error.message, 500));
     }
   });
 });
@@ -50,6 +52,10 @@ const getAllPosts = asyncHandler(async (req, res) => {
 
   const skipPost = limit * (currentPage - 1);
 
+  const totalPosts = await Post.find().countDocuments();
+
+  const maxPages = Math.ceil(totalPosts / limit);
+
   const posts = await Post.find()
     .populate("postedBy likes savedBy", "_id username profilePicture")
     .populate({
@@ -63,7 +69,7 @@ const getAllPosts = asyncHandler(async (req, res) => {
     .skip(skipPost)
     .sort({ createdAt: -1 });
 
-  res.status(200).json(posts);
+  res.status(200).json({ posts, maxPages });
 });
 
 // @desct   get post Detail

@@ -9,6 +9,9 @@
 }
 
 @layer components {
+  .actionBtn {
+    @apply px-3 py-1 border border-gray-300 font-semibold text-sm outline-none active:bg-gray-500/10;
+  }
   .listBtn {
     @apply text-sm text-blue-400 font-semibold;
   }

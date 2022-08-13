@@ -6,8 +6,9 @@ import { Link, useParams } from "react-router-dom";
 import ImageCard from "../components/ProfilePages/ImageCard";
 import ModalTiny from "../components/UI/ModalTiny";
 import ToggleFollowUnfollow from "../components/UI/ToggleFollowUnfollow";
-import { resetUser } from "../features/auth/userSlice";
+import { getPersonalAccount, resetUser } from "../features/auth/userSlice";
 import {
+  hideModalThreeDots,
   resetPostList,
   setPostListSync,
 } from "../features/postList/postListSlice";
@@ -27,7 +28,12 @@ const ProfilePages = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    dispatch(getPersonalAccount());
+  }, [dispatch]);
+
+  useEffect(() => {
     dispatch(getProfileInfo(username));
+    setShowModal("");
   }, [dispatch, username]);
 
   useEffect(() => {
@@ -36,7 +42,9 @@ const ProfilePages = () => {
     }
   }, [isSuccessUser, dispatch]);
 
-  let user = info;
+  const isOwnProfile = username === ownUser?.username;
+
+  let user = isOwnProfile ? ownUser : info;
 
   useEffect(() => {
     let payload;
@@ -49,8 +57,6 @@ const ProfilePages = () => {
       dispatch(resetPostList());
     };
   }, [navigation, dispatch, user?.posts, user?.saved]);
-
-  const isOwnProfile = username === ownUser?.username;
 
   useDisableBodyScroll(showModal);
 
@@ -81,9 +87,7 @@ const ProfilePages = () => {
               {!isOwnProfile && <ToggleFollowUnfollow following={user} />}
               {isOwnProfile && (
                 <Link to="/edit" className="ml-auto">
-                  <button className="px-3 py-1 border border-gray-300 font-semibold text-sm outline-none active:bg-gray-500/10">
-                    Edit Profile
-                  </button>
+                  <button className="actionBtn">Edit Profile</button>
                 </Link>
               )}
             </div>

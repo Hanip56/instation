@@ -2,8 +2,10 @@ import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
 import ModalEditPhoto from "../components/EditProfile/ModalEditPhoto";
 import Footer from "../components/Footer";
+import LdsSpinner from "../components/UI/LdsSpinner";
 import {
   getPersonalAccount,
   resetUser,
@@ -13,7 +15,9 @@ import {
 const EditProfile = () => {
   const dispatch = useDispatch();
   const [showModalPhoto, setShowModalPhoto] = useState(false);
-  const { user, isSuccess } = useSelector((state) => state.user);
+  const { user, isSuccess, isLoading, stateUpdateUser } = useSelector(
+    (state) => state.user
+  );
   const [form, setForm] = useState({
     fullname: user?.fullname,
     username: user?.username,
@@ -55,6 +59,12 @@ const EditProfile = () => {
   const handleOpen = () => {
     setShowModalPhoto(true);
   };
+
+  useEffect(() => {
+    if (stateUpdateUser) {
+      toast.success("Updated Successfully");
+    }
+  }, [stateUpdateUser]);
 
   return (
     <>
@@ -143,8 +153,9 @@ const EditProfile = () => {
                   onChange={handleChange}
                 />
               </div>
-              <button className="py-1 px-2 bg-blue-ig rounded-md w-20 text-sm ml-[9.5rem] text-white">
-                Submit
+              <button className="relative py-1 px-4 bg-blue-ig rounded-md w-28 text-sm ml-[9.5rem] text-white text-center flex justify-center">
+                {isLoading && <LdsSpinner width={"1rem"} height={"1rem"} />}
+                {!isLoading && "Submit"}
               </button>
             </form>
           </div>
