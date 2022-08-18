@@ -108,32 +108,30 @@ const ModalPost = () => {
                   />
                 </div>
               </Link>
-              <Link to={`/${currentPost?.postedBy?.username}`}>
-                <div>
-                  <h4 className="font-semibold">
-                    {currentPost?.postedBy?.username}
-                    {!isFollowed && !isOwnUser ? (
+              <div>
+                <h4 className="font-semibold">
+                  {currentPost?.postedBy?.username}
+                  {!isFollowed && !isOwnUser ? (
+                    <span
+                      className="text-xs text-blue-ig cursor-pointer"
+                      onClick={handleFollow}
+                    >
+                      {" "}
+                      . Follow
+                    </span>
+                  ) : (
+                    !isOwnUser && (
                       <span
-                        className="text-xs text-blue-ig cursor-pointer"
-                        onClick={handleFollow}
+                        className="text-xs cursor-pointer"
+                        onClick={handleUnfollow}
                       >
                         {" "}
-                        . Follow
+                        . Following
                       </span>
-                    ) : (
-                      !isOwnUser && (
-                        <span
-                          className="text-xs cursor-pointer"
-                          onClick={handleUnfollow}
-                        >
-                          {" "}
-                          . Following
-                        </span>
-                      )
-                    )}
-                  </h4>
-                </div>
-              </Link>
+                    )
+                  )}
+                </h4>
+              </div>
             </header>
             <main className="p-2 px-4 flex-1 border border-transparent border-b-gray-200">
               <div className="flex gap-x-4">

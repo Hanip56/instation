@@ -10,6 +10,7 @@ import {
   IoSettingsOutline,
   IoHomeOutline,
   IoHomeSharp,
+  IoPaperPlaneSharp,
 } from "react-icons/io5";
 import { CgProfile } from "react-icons/cg";
 import { IoIosAddCircleOutline } from "react-icons/io";
@@ -60,8 +61,10 @@ const Navbar = () => {
                 </NavLink>
               </li>
               <li>
-                <NavLink to="">
-                  <IoPaperPlaneOutline />
+                <NavLink to="/chat">
+                  {({ isActive }) =>
+                    isActive ? <IoPaperPlaneSharp /> : <IoPaperPlaneOutline />
+                  }
                 </NavLink>
               </li>
               <li>

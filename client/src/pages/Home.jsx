@@ -24,14 +24,13 @@ const Home = () => {
     maxPages,
   } = useSelector((state) => state.postList);
 
+  // handle load more content when reach the end scrollbar
   useEffect(() => {
     const handleScroll = () => {
       const maxScrollY =
         document.documentElement.scrollHeight -
         document.documentElement.clientHeight;
 
-      console.log({ currentPage });
-      console.log(maxPages);
       if (
         window.scrollY >= maxScrollY &&
         !reGetIsLoading &&

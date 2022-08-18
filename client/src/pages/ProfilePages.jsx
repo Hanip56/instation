@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 import ImageCard from "../components/ProfilePages/ImageCard";
+import MessageBtn from "../components/ProfilePages/MessageBtn";
 import ModalTiny from "../components/UI/ModalTiny";
 import ToggleFollowUnfollow from "../components/UI/ToggleFollowUnfollow";
 import { getPersonalAccount, resetUser } from "../features/auth/userSlice";
@@ -60,6 +61,10 @@ const ProfilePages = () => {
 
   useDisableBodyScroll(showModal);
 
+  const isFollowed = ownUser?.followings?.some(
+    (f) => f?._id?.toString() === user?._id?.toString()
+  );
+
   return (
     <>
       {showModal && (
@@ -84,6 +89,11 @@ const ProfilePages = () => {
             <div className="flex gap-x-4 items-center">
               <h2 className="text-4xl font-light">{user?.username}</h2>
 
+              {!isOwnProfile && isFollowed && (
+                <Link to="/chat" className="ml-auto">
+                  <MessageBtn following={user} />
+                </Link>
+              )}
               {!isOwnProfile && <ToggleFollowUnfollow following={user} />}
               {isOwnProfile && (
                 <Link to="/edit" className="ml-auto">

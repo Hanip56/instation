@@ -13,6 +13,7 @@ import { useDisableBodyScroll } from "../hooks/preventWindowScroll";
 import EditProfile from "./EditProfile";
 import ModalThreeDots from "../components/Modal/ModalThreeDots";
 import { toast } from "react-toastify";
+import ChatPages from "./ChatPages";
 
 const MainContainer = () => {
   const { showModal } = useSelector((state) => state.createPost);
@@ -61,6 +62,7 @@ const MainContainer = () => {
           <Route path="/about" element={<h1>About</h1>} />
           <Route path="/edit" element={<EditProfile />} />
           <Route path="/:username" element={<ProfilePages />} />
+          <Route path="/chat" element={<ChatPages />} />
           <Route path="/explore" element={<Explore />} />
           <Route path="/signin" element={<Navigate to="/" replace />} />
           <Route path="/signup" element={<Navigate to="/" replace />} />
