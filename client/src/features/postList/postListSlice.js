@@ -12,9 +12,15 @@ const initialState = {
     set: false,
     data: {},
   },
+  showModalOptions: {
+    set: false,
+    data: {},
+  },
   isLoading: false,
   isError: false,
   isSuccess: false,
+  deletedIsSuccess: false,
+  updatedIsSuccess: false,
   reGetIsLoading: false,
   message: "",
 };
@@ -151,6 +157,44 @@ export const addComment = createAsyncThunk(
   }
 );
 
+export const deletePost = createAsyncThunk(
+  "postList/delete",
+  async (postId, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.token.token;
+      return await postListService.deletePost(postId, token);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const updatePost = createAsyncThunk(
+  "postList/update",
+  async (data, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.token.token;
+      return await postListService.updatePost(data, token);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 const postListSlice = createSlice({
   name: "postList",
   initialState,
@@ -166,6 +210,8 @@ const postListSlice = createSlice({
       state.isLoading = false;
       state.isError = false;
       state.isSuccess = false;
+      state.deletedIsSuccess = false;
+      state.updatedIsSuccess = false;
       state.message = "";
     },
     resetStatePostList: (state) => {
@@ -182,6 +228,8 @@ const postListSlice = createSlice({
     showModalPostList: (state, action) => {
       state.showModalPostList.data = action.payload;
       state.showModalPostList.set = true;
+      state.deletedIsSuccess = false;
+      state.updatedIsSuccess = false;
     },
     hideModalPostList: (state) => {
       state.showModalPostList.data = {};
@@ -194,6 +242,14 @@ const postListSlice = createSlice({
     hideModalThreeDots: (state) => {
       state.showModalThreeDots.data = {};
       state.showModalThreeDots.set = false;
+    },
+    showModalOptions: (state, action) => {
+      state.showModalOptions.data = action.payload;
+      state.showModalOptions.set = true;
+    },
+    hideModalOptions: (state) => {
+      state.showModalOptions.data = {};
+      state.showModalOptions.set = false;
     },
     setPostListSync: (state, action) => {
       state.postList = action.payload;
@@ -213,6 +269,21 @@ const postListSlice = createSlice({
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
+      })
+      .addCase(deletePost.fulfilled, (state, action) => {
+        state.postList = state.postList.filter(
+          (post) => post._id !== action.payload
+        );
+        state.deletedIsSuccess = true;
+      })
+      .addCase(updatePost.fulfilled, (state, action) => {
+        const currentState = current(state);
+        const index = currentState.postList.findIndex(
+          (post) => post._id === action.payload.id
+        );
+
+        state.postList[index].caption = action.payload.caption;
+        state.updatedIsSuccess = true;
       })
       .addCase(reGetPostsFollowing.pending, (state) => {
         state.reGetIsLoading = true;
@@ -308,6 +379,8 @@ export const {
   setPostListSync,
   showModalThreeDots,
   hideModalThreeDots,
+  showModalOptions,
+  hideModalOptions,
 } = postListSlice.actions;
 
 export default postListSlice.reducer;

@@ -216,7 +216,7 @@ const updateCaption = asyncHandler(async (req, res) => {
 
   await post.save();
 
-  res.status(200).json({ message: "Post updated" });
+  res.status(200).json({ id: post._id, caption: post.caption });
 });
 
 // @desc    add comment post

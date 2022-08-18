@@ -5,6 +5,7 @@ import {
   hideModalPostList,
   likePost,
   savePost,
+  showModalOptions,
 } from "../../features/postList/postListSlice";
 import {
   IoHeartOutline,
@@ -17,6 +18,7 @@ import {
 import { VscSmiley } from "react-icons/vsc";
 import { followUser, unfollowUser } from "../../features/auth/userSlice";
 import { Link } from "react-router-dom";
+import { BsThreeDots } from "react-icons/bs";
 
 const ModalPost = () => {
   const dispatch = useDispatch();
@@ -80,6 +82,10 @@ const ModalPost = () => {
     dispatch(unfollowUser(currentPost?.postedBy?._id));
   };
 
+  const handleShowModalOptions = () => {
+    dispatch(showModalOptions(currentPost));
+  };
+
   return (
     <>
       <div
@@ -131,6 +137,12 @@ const ModalPost = () => {
                     )
                   )}
                 </h4>
+              </div>
+              <div
+                className="w-6 h-6 flex justify-center items-center ml-auto cursor-pointer"
+                onClick={handleShowModalOptions}
+              >
+                {isOwnUser && <BsThreeDots />}
               </div>
             </header>
             <main className="p-2 px-4 flex-1 border border-transparent border-b-gray-200">

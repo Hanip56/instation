@@ -14,12 +14,17 @@ import EditProfile from "./EditProfile";
 import ModalThreeDots from "../components/Modal/ModalThreeDots";
 import { toast } from "react-toastify";
 import ChatPages from "./ChatPages";
+import ModalOptions from "../components/Modal/ModalOptions";
 
 const MainContainer = () => {
   const { showModal } = useSelector((state) => state.createPost);
-  const { showModalPostList, showModalThreeDots } = useSelector(
-    (state) => state.postList
-  );
+  const {
+    showModalPostList,
+    showModalThreeDots,
+    showModalOptions,
+    updatedIsSuccess,
+    deletedIsSuccess,
+  } = useSelector((state) => state.postList);
   const { stateCreatePost, isError, message } = useSelector(
     (state) => state.user
   );
@@ -39,9 +44,21 @@ const MainContainer = () => {
 
   useEffect(() => {
     if (stateCreatePost) {
-      toast.success("succes");
+      toast.success("posted succesfully");
     }
   }, [stateCreatePost]);
+
+  useEffect(() => {
+    if (updatedIsSuccess) {
+      toast.success("updated succesfully");
+    }
+  }, [updatedIsSuccess]);
+
+  useEffect(() => {
+    if (deletedIsSuccess) {
+      toast.success("deleted succesfully");
+    }
+  }, [deletedIsSuccess]);
 
   useEffect(() => {
     if (isError) {
@@ -53,6 +70,7 @@ const MainContainer = () => {
     <div className=" min-h-screen">
       {showModalPostList.set && <ModalPost />}
       {showModalThreeDots.set && <ModalThreeDots />}
+      {showModalOptions.set && <ModalOptions />}
       {showModal && <ModalCreate />}
 
       <Navbar />

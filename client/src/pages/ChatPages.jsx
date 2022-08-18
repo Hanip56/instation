@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from "react-redux";
 import MessageCard from "../components/ChatPages/MessageCard";
 import ModalDelete from "../components/ChatPages/ModalDelete";
 import ProfileCard from "../components/ChatPages/ProfileCard";
-import Spinner from "../components/UI/Spinner";
 import io from "socket.io-client";
 import {
   addMessageSync,

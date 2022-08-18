@@ -87,6 +87,30 @@ const addComment = async (data, token) => {
   return res.data;
 };
 
+const deletePost = async (postId, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  const res = await axios.delete(API_URL + postId, config);
+
+  return res.data;
+};
+
+const updatePost = async (data, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  const res = await axios.put(API_URL + data.postId, data.data, config);
+
+  return res.data;
+};
+
 const postService = {
   getPostsFollowing,
   reGetPostsFollowing,
@@ -94,6 +118,8 @@ const postService = {
   likePost,
   savePost,
   addComment,
+  deletePost,
+  updatePost,
 };
 
 export default postService;

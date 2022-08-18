@@ -3,7 +3,6 @@ import axios from "axios";
 const API_URL = "/api/user/";
 
 const getProfileInfo = async (username, token) => {
-  console.log({ username });
   const config = {
     Authorization: `Bearer ${token}`,
   };

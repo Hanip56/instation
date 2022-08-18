@@ -9,7 +9,6 @@ import ModalTiny from "../components/UI/ModalTiny";
 import ToggleFollowUnfollow from "../components/UI/ToggleFollowUnfollow";
 import { getPersonalAccount, resetUser } from "../features/auth/userSlice";
 import {
-  hideModalThreeDots,
   resetPostList,
   setPostListSync,
 } from "../features/postList/postListSlice";
