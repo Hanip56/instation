@@ -13,6 +13,7 @@ const PORT = process.env.PORT || 5000;
 const app = express();
 const server = http.createServer(app);
 
+// socket io //
 const io = new Server(server, {
   cors: {
     origin: "http://localhost:3000",
@@ -22,6 +23,7 @@ const io = new Server(server, {
 let users = [];
 
 const addUser = (userId, socketId) => {
+  console.log("adding");
   if (userId === null) {
     return;
   }
@@ -44,9 +46,8 @@ io.on("connection", (socket) => {
   //   take user id and socket id
   socket.on("addUser", (userId) => {
     addUser(userId, socket.id);
+    io.emit("getUsers", users);
   });
-  io.emit("getUsers", users);
-
   //   send messages
   socket.on("sendMessage", ({ senderId, receiverId, text }) => {
     const user = getUser(receiverId);
@@ -61,10 +62,12 @@ io.on("connection", (socket) => {
 
   //  when  disconnect
   socket.on("disconnect", () => {
-    console.log(`a user has been disconnected`);
+    console.log(`a user with id:${socket.id} has been disconnected`);
     removeUser(socket.id);
+    io.emit("getUsers", users);
   });
 });
+// end socket io //
 
 app.use(cors());
 app.use(express.json());
@@ -77,6 +80,14 @@ app.use("/api/user", require("./routes/userRoutes"));
 app.use("/api/post", require("./routes/postRoutes"));
 app.use("/api/conversation", require("./routes/convRoutes"));
 app.use("/api/message", require("./routes/msgRoutes"));
+
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static("client/build"));
+
+  app.get("*", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
+  });
+}
 
 app.use(errorHandler);
 

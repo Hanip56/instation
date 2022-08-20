@@ -164,6 +164,11 @@ const unfollowUser = asyncHandler(async (req, res) => {
   const { userId } = req.params;
   const { _id } = req.user;
 
+  if (!userId) {
+    res.status(404);
+    throw new Error("User not found");
+  }
+
   if (userId === _id.toString()) {
     res.status(403);
     throw new Error("Action Forbidden");
@@ -186,6 +191,48 @@ const unfollowUser = asyncHandler(async (req, res) => {
     });
   } else {
     res.status(400).json("You already unfollowed this account");
+  }
+});
+
+// @desc    remove follower
+// @route   PUT /api/user/:userId/removefollower
+// @access  PRIVATE
+const removeFollower = asyncHandler(async (req, res) => {
+  const { userId } = req.params;
+  const { _id } = req.user;
+
+  if (!userId) {
+    res.status(404);
+    throw new Error("User not found");
+  }
+
+  if (userId === _id.toString()) {
+    res.status(403);
+    throw new Error("Action Forbidden");
+  }
+
+  try {
+    const currentUser = await User.findById(_id);
+    const targetUser = await User.findById(userId);
+
+    if (currentUser.followers.includes(userId)) {
+      await targetUser.updateOne({ $pull: { followings: _id } });
+      await currentUser.updateOne({ $pull: { followers: userId } });
+
+      res.status(200).json({
+        user: {
+          _id: targetUser._id,
+          username: targetUser.username,
+          profilePicture: targetUser.profilePicture,
+        },
+        message: "removed Succesfully",
+      });
+    } else {
+      res.status(400).json("You already removed this follower");
+    }
+  } catch (error) {
+    res.status(500);
+    throw new Error(error.message);
   }
 });
 
@@ -228,4 +275,5 @@ module.exports = {
   followUser,
   unfollowUser,
   updateProfilePicture,
+  removeFollower,
 };

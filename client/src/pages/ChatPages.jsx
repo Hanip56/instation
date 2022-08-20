@@ -20,6 +20,7 @@ const ChatPages = () => {
   const { user } = useSelector((state) => state.user);
   const [modalDelete, setModalDelete] = useState(false);
   const [textMessage, setTextMessage] = useState("");
+  const [onlineUsers, setOnlineUsers] = useState([]);
   const [socket, setSocket] = useState(null);
   const [arrivalMessage, setArrivalMessage] = useState({});
   // const socket = useRef(io("ws://localhost:5000"));
@@ -40,7 +41,7 @@ const ChatPages = () => {
   useEffect(() => {
     socket?.emit("addUser", user?._id);
     socket?.on("getUsers", (users) => {
-      // console.log(users);
+      setOnlineUsers(users);
     });
     socket?.on("receiveMessage", (data) => {
       setArrivalMessage({
@@ -50,6 +51,12 @@ const ChatPages = () => {
       });
     });
   }, [user, socket]);
+
+  // useEffect(() => {
+  //   socket?.on("getUsers", (users) => {
+  //     console.log(users);
+  //   });
+  // }, [socket]);
 
   useEffect(() => {
     if (isSuccesConv) {
@@ -124,6 +131,7 @@ const ChatPages = () => {
                 key={dataConv?.id}
                 dataConv={dataConv}
                 currentConv={currentConv}
+                onlineUsers={onlineUsers}
               />
             ))}
           </main>

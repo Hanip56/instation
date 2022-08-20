@@ -89,6 +89,25 @@ export const unfollowUser = createAsyncThunk(
   }
 );
 
+export const removeFollower = createAsyncThunk(
+  "user/removefollower",
+  async (userId, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.token.token;
+      return await userService.removeFollower(userId, token);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const updateUser = createAsyncThunk(
   "user/updateuser",
   async (data, thunkAPI) => {
@@ -179,6 +198,14 @@ const userSlice = createSlice({
         );
       })
       .addCase(unfollowUser.rejected, (state, action) => {
+        state.message = action.payload;
+      })
+      .addCase(removeFollower.fulfilled, (state, action) => {
+        state.user.followers = state.user.followers.filter(
+          (follower) => follower._id !== action.payload.user._id
+        );
+      })
+      .addCase(removeFollower.rejected, (state, action) => {
         state.message = action.payload;
       })
       .addCase(updateUser.pending, (state) => {

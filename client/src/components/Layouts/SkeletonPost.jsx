@@ -1,8 +1,8 @@
-import { Skeleton } from "@mui/material";
+import Skeleton from "@mui/material/Skeleton";
 
 const SkeletonPost = () => {
   return (
-    <div className="flex flex-col border w-full my-4 rounded bg-white">
+    <div className="flex flex-col border h-[32rem] w-[90%] sm:w-[32rem] mx-auto rounded-md bg-white">
       <div className="flex items-center gap-2 p-2">
         <Skeleton animation="wave" variant="circular" width={40} height={40} />
         <div className="flex flex-col gap-1 w-full">

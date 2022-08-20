@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Footer from "../components/Footer";
+import SkeletonExplore from "../components/Layouts/SkeletonExplore";
 import ImageCard from "../components/ProfilePages/ImageCard";
 import Spinner from "../components/UI/Spinner";
 import {
@@ -26,7 +27,6 @@ const Explore = () => {
   }, [dispatch]);
 
   const handleReGet = () => {
-    console.log("ok");
     if (!reGetIsLoading && currentPage <= maxPages) {
       dispatch(reGetAllPosts(currentPage));
       setCurrentPage((prev) => prev + 1);
@@ -36,7 +36,7 @@ const Explore = () => {
   return (
     <>
       <div className="w-full">
-        {isLoading && <Spinner />}
+        {isLoading && <SkeletonExplore />}
         <main className="grid grid-cols-3 gap-4">
           {!isLoading &&
             postList?.map((post, idx) => (

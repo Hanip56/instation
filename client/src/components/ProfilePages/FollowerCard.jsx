@@ -1,14 +1,18 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
-import { followUser } from "../../features/auth/userSlice";
-import { hideModalThreeDots } from "../../features/postList/postListSlice";
+import { Link, useParams } from "react-router-dom";
+import { followUser, removeFollower } from "../../features/auth/userSlice";
 
-const FollowerCard = ({ follower }) => {
+const FollowerCard = ({ follower, setShowModal }) => {
+  const params = useParams();
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
+  const { username } = params;
 
   const isFollowed = user?.followings?.some(
+    (e) => e._id?.toString() === follower._id?.toString()
+  );
+  const isFollower = user?.followers?.some(
     (e) => e._id?.toString() === follower._id?.toString()
   );
 
@@ -17,6 +21,13 @@ const FollowerCard = ({ follower }) => {
   const handleFollow = () => {
     dispatch(followUser(follower?._id));
   };
+
+  const handleRemoveFollower = () => {
+    dispatch(removeFollower(follower?._id));
+    setShowModal("");
+  };
+
+  const isOwnProfile = username === user?.username;
 
   return (
     <>
@@ -50,9 +61,14 @@ const FollowerCard = ({ follower }) => {
           </div>
         </Link>
 
-        <button className="ml-auto px-3 py-1 border border-gray-300 font-semibold text-sm">
-          Remove
-        </button>
+        {isFollower && isOwnProfile && (
+          <button
+            className="ml-auto px-3 py-1 border border-gray-300 font-semibold text-sm"
+            onClick={handleRemoveFollower}
+          >
+            Remove
+          </button>
+        )}
       </div>
     </>
   );

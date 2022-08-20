@@ -23,7 +23,11 @@ const ModalTiny = ({ followers, followings, content, setShowModal }) => {
           <main className="h-48 overflow-y-scroll space-y-2">
             {content === "followers" &&
               followers.map((follower) => (
-                <FollowerCard follower={follower} key={follower._id} />
+                <FollowerCard
+                  follower={follower}
+                  key={follower._id}
+                  setShowModal={setShowModal}
+                />
               ))}
             {content === "followings" &&
               followings.map((following) => (

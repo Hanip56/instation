@@ -39,6 +39,23 @@ const unfollowUser = async (userId, token) => {
 
   return res.data;
 };
+const removeFollower = async (userId, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  const data = {};
+
+  const res = await axios.put(
+    API_URL + userId + "/removefollower",
+    data,
+    config
+  );
+
+  return res.data;
+};
 
 // create post
 const createPost = async (data, token) => {
@@ -89,6 +106,7 @@ const userService = {
   unfollowUser,
   updateUser,
   updateProfilePicture,
+  removeFollower,
 };
 
 export default userService;

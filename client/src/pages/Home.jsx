@@ -12,10 +12,16 @@ import {
   resetPostList,
 } from "../features/postList/postListSlice";
 import { useState } from "react";
+import SkeletonPost from "../components/Layouts/SkeletonPost";
+import SkeletonProfile from "../components/Layouts/SkeletonProfile";
 
 const Home = () => {
   const dispatch = useDispatch();
-  const { user, isSuccess: isSuccessUser } = useSelector((state) => state.user);
+  const {
+    user,
+    isSuccess: isSuccessUser,
+    isLoading: isLoadingUser,
+  } = useSelector((state) => state.user);
   const [currentPage, setCurrentPage] = useState(2);
   const {
     postList,
@@ -70,7 +76,10 @@ const Home = () => {
     <>
       <div className="w-full flex justify-between gap-x-5">
         <div className="flex-1 w-full flex flex-col gap-y-4 pb-20">
-          {isLoadingPF && <Spinner />}
+          {isLoadingPF &&
+            Array(4)
+              .fill("")
+              .map((el, i) => <SkeletonPost key={i} />)}
           {!isLoadingPF && postList?.length < 1 && (
             <h1>There's no post, Let's Follow someone!!</h1>
           )}
@@ -86,17 +95,20 @@ const Home = () => {
         <aside className="hidden lg:block basis-2/5 w-full h-32 p-1">
           {/* account */}
           <div className="flex w-full h-20 gap-x-2 items-center justify-between">
-            <Link to={`/${user?.username}`}>
-              <div className="flex items-center gap-x-4">
-                <div className="w-16 h-16 rounded-full overflow-hidden border border-gray-200">
-                  <img src={user?.profilePicture} alt={user?.username} />
+            {isLoadingUser && <SkeletonProfile />}
+            {!isLoadingUser && (
+              <Link to={`/${user?.username}`}>
+                <div className="flex items-center gap-x-4">
+                  <div className="w-16 h-16 rounded-full overflow-hidden border border-gray-200">
+                    <img src={user?.profilePicture} alt={user?.username} />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold">{user?.username}</h4>
+                    <p className="text-gray-500 text-sm">{user?.fullname}</p>
+                  </div>
                 </div>
-                <div>
-                  <h4 className="font-semibold">{user?.username}</h4>
-                  <p className="text-gray-500 text-sm">{user?.fullname}</p>
-                </div>
-              </div>
-            </Link>
+              </Link>
+            )}
             <button className="listBtn" onClick={handleLogout}>
               LOGOUT
             </button>

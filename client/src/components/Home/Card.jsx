@@ -1,4 +1,6 @@
 import React from "react";
+import data from "@emoji-mart/data";
+import Picker from "@emoji-mart/react";
 import { useState } from "react";
 import {
   IoHeartOutline,
@@ -63,7 +65,8 @@ const Card = ({ post }) => {
   const currentPostDate = get_time_diff(postDate);
 
   return (
-    <div className="max-w-lg mx-auto rounded-md border border-gray-300 bg-white">
+    <div className="w-[90%] sm:w-[32rem] mx-auto rounded-md border border-gray-300 bg-white">
+      <Picker data={data} onEmojiSelect={console.log} />
       <header className="w-full h-14 flex justify-between items-center px-2">
         <Link to={`/${post?.postedBy?.username}`}>
           <div className="flex items-center gap-x-2">
