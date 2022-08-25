@@ -90,6 +90,24 @@ const getAllUsers = asyncHandler(async (req, res) => {
   res.status(200).json(users);
 });
 
+// @desc    find user
+// @route   GET /api/user/find
+// @access  PUBLIC
+const findUser = asyncHandler(async (req, res) => {
+  const search = req.query.search;
+
+  try {
+    const users = await User.find({
+      username: { $regex: ".*" + search + ".*" },
+    }).select("_id username fullname profilePicture");
+
+    res.status(200).json(users);
+  } catch (error) {
+    res.status(500);
+    throw new Error(error.message);
+  }
+});
+
 // @desc    update one user
 // @route   PUT /api/user/:userId
 // @access  PRIVATE
@@ -268,6 +286,7 @@ const updateProfilePicture = asyncHandler(async (req, res) => {
 
 module.exports = {
   getPersonalAccount,
+  findUser,
   getOneUser,
   getAllUsers,
   updateUser,

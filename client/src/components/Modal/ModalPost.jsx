@@ -60,6 +60,8 @@ const ModalPost = () => {
   const handleSubmitComment = (e) => {
     e.preventDefault();
 
+    if (!comment) return;
+
     const data = {
       comment,
       postId: currentPost?._id,
@@ -86,6 +88,46 @@ const ModalPost = () => {
     dispatch(showModalOptions(currentPost));
   };
 
+  const headerEl = (
+    <header className="flex py-2 px-4 gap-x-2 border border-transparent border-b-gray-200">
+      <Link to={`/${currentPost?.postedBy?.username}`}>
+        <div className="w-8 h-8 rounded-full overflow-hidden">
+          <img
+            src={currentPost?.postedBy?.profilePicture}
+            alt={currentPost?.postedBy?.username}
+          />
+        </div>
+      </Link>
+      <div>
+        <h4 className="font-semibold">
+          {currentPost?.postedBy?.username}
+          {!isFollowed && !isOwnUser ? (
+            <span
+              className="text-xs text-blue-ig cursor-pointer"
+              onClick={handleFollow}
+            >
+              {" "}
+              . Follow
+            </span>
+          ) : (
+            !isOwnUser && (
+              <span className="text-xs cursor-pointer" onClick={handleUnfollow}>
+                {" "}
+                . Following
+              </span>
+            )
+          )}
+        </h4>
+      </div>
+      <div
+        className="w-6 h-6 flex justify-center items-center ml-auto cursor-pointer"
+        onClick={handleShowModalOptions}
+      >
+        {isOwnUser && <BsThreeDots />}
+      </div>
+    </header>
+  );
+
   return (
     <>
       <div
@@ -94,8 +136,10 @@ const ModalPost = () => {
       ></div>
 
       <div className="fixed left-[50%] top-[50%] -translate-y-[50%] -translate-x-[50%] z-50 flex justify-center items-center rounded-md">
-        <div className="flex w-[80vw] lg:w-[80vw] bg-white h-[90vh] rounded-md overflow-hidden">
-          <div className="basis-[65%] bg-black">
+        <div className="flex flex-col sm:flex-row w-[80vw] lg:w-[80vw] bg-white h-[80vh] sm:h-[90vh] rounded-md overflow-hidden justify-between">
+          <div className="block sm:hidden">{headerEl}</div>
+
+          <div className="basis-[75%] sm:basis-[65%] bg-black overflow-hidden">
             <div className="w-full h-full">
               <img
                 src={currentPost?.image}
@@ -105,47 +149,8 @@ const ModalPost = () => {
             </div>
           </div>
           <div className="flex-1 flex flex-col">
-            <header className="flex py-2 px-4 gap-x-2 border border-transparent border-b-gray-200">
-              <Link to={`/${currentPost?.postedBy?.username}`}>
-                <div className="w-8 h-8 rounded-full overflow-hidden">
-                  <img
-                    src={currentPost?.postedBy?.profilePicture}
-                    alt={currentPost?.postedBy?.username}
-                  />
-                </div>
-              </Link>
-              <div>
-                <h4 className="font-semibold">
-                  {currentPost?.postedBy?.username}
-                  {!isFollowed && !isOwnUser ? (
-                    <span
-                      className="text-xs text-blue-ig cursor-pointer"
-                      onClick={handleFollow}
-                    >
-                      {" "}
-                      . Follow
-                    </span>
-                  ) : (
-                    !isOwnUser && (
-                      <span
-                        className="text-xs cursor-pointer"
-                        onClick={handleUnfollow}
-                      >
-                        {" "}
-                        . Following
-                      </span>
-                    )
-                  )}
-                </h4>
-              </div>
-              <div
-                className="w-6 h-6 flex justify-center items-center ml-auto cursor-pointer"
-                onClick={handleShowModalOptions}
-              >
-                {isOwnUser && <BsThreeDots />}
-              </div>
-            </header>
-            <main className="p-2 px-4 flex-1 border border-transparent border-b-gray-200">
+            <div className="hidden sm:block">{headerEl}</div>
+            <main className="hidden sm:block p-2 px-4 basis-[80%] border border-transparent border-b-gray-200">
               <div className="flex gap-x-4">
                 <div className="w-8 h-8 rounded-full overflow-hidden">
                   <img
@@ -186,7 +191,7 @@ const ModalPost = () => {
                 ))}
               </div>
             </main>
-            <footer className="p-2 space-y-2">
+            <footer className="basis-[20%] p-4 flex flex-col justify-between gap-y-3">
               <div className="flex items-center gap-x-4 text-2xl">
                 <button onClick={handleLoves}>
                   {liked && <IoHeartSharp className="text-red-500" />}
@@ -217,7 +222,7 @@ const ModalPost = () => {
               <div>
                 <p className="font-light text-gray-500 text-xs">20 hours ago</p>
               </div>
-              <div className="border border-transparent border-t-gray-200 py-2">
+              <div className="hidden sm:block border border-transparent border-t-gray-200 py-2">
                 <form
                   onSubmit={handleSubmitComment}
                   className="w-full flex gap-x-2"
@@ -234,7 +239,9 @@ const ModalPost = () => {
                   />
                   <button
                     type="submit"
-                    className="text-blue-300/80 font-semibold text-sm"
+                    className={`${
+                      comment ? "text-blue-400" : "text-blue-300/80"
+                    } font-semibold text-sm`}
                   >
                     Post
                   </button>

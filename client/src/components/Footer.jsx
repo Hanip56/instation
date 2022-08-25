@@ -15,7 +15,7 @@ const Footer = () => {
         <Link to="/about">Locations</Link>
         <Link to="/about">Language</Link>
       </div>
-      <h4 className="text-sm mt-3">c 2022 INSTAGRAM FROM META</h4>
+      <h4 className="text-sm mt-3">&copy; 2022 INSTATION BY HANIP .A</h4>
     </div>
   );
 };

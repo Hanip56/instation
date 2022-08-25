@@ -32,7 +32,7 @@ const SignIn = () => {
           onSubmit={handleSubmit(onSubmit)}
           className="contentContainer w-[20rem] flex flex-col text-center p-6 px-10 items-center justify-center gap-y-3"
         >
-          <h1 className="text-3xl mb-6">Instagram</h1>
+          <h1 className="text-3xl mb-6">Instation</h1>
           <input
             placeholder="username or email"
             className="input"
@@ -54,7 +54,7 @@ const SignIn = () => {
           {errors.password?.type === "minLength" && (
             <p className="error">password minimum is 6.</p>
           )}
-          <button className="w-full text-white font-semibold bg-blue-ig rounded-md p-1 mt-3">
+          <button className="w-full text-white font-semibold bg-blue-ig rounded-md p-1 mt-3 outline-none overflow-hidden">
             {isLoading && <LdsSpinner width={"2rem"} height={"2rem"} />}
             {!isLoading && "Log In"}
           </button>

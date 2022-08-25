@@ -5,6 +5,7 @@ function useOutsideAlerter(ref, set) {
     /**
      * Alert if clicked on outside of element
      */
+
     console.log("clicked outside");
 
     function handleClickOutside(event) {

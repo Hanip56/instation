@@ -42,6 +42,8 @@ const Card = ({ post }) => {
   const handleSubmitComment = (e) => {
     e.preventDefault();
 
+    if (!comment) return;
+
     const data = {
       comment,
       postId: post?._id,
@@ -153,7 +155,9 @@ const Card = ({ post }) => {
           />
           <button
             type="submit"
-            className="text-blue-300/80 font-semibold text-sm"
+            className={`${
+              comment ? "text-blue-400" : "text-blue-300/80"
+            } font-semibold text-sm`}
           >
             Post
           </button>

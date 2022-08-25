@@ -9,6 +9,7 @@ const {
   getPersonalAccount,
   updateProfilePicture,
   removeFollower,
+  findUser,
 } = require("../controllers/userControllers");
 const { protect } = require("../middleware/authMiddleware");
 
@@ -17,6 +18,7 @@ router.get("/personal", protect, getPersonalAccount);
 router.route("/:userId").put(protect, updateUser).delete(protect, deleteUser);
 
 router.get("/:username", getOneUser);
+router.get("/s/find", findUser);
 
 router.put("/:userId/follow", protect, followUser);
 router.put("/:userId/unfollow", protect, unfollowUser);

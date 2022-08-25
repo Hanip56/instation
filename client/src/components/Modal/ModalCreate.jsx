@@ -30,7 +30,6 @@ const ModalCreate = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    console.log({ postimage: postImage });
     const formdata = new FormData();
 
     formdata.append("postimage", postImage);
