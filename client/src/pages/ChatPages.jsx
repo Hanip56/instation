@@ -29,7 +29,11 @@ const ChatPages = () => {
   const chatBoxRef = useRef(null);
 
   useEffect(() => {
-    setSocket(io("ws://localhost:5000"));
+    const SOCKET_ENDPOINT =
+      process.env.NODE_ENV === "production"
+        ? "https://instation.herokuapp.com"
+        : "ws://localhost:5000";
+    setSocket(io(SOCKET_ENDPOINT));
   }, []);
 
   useEffect(() => {
