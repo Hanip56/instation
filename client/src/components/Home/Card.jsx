@@ -77,8 +77,6 @@ const Card = ({ post }) => {
     setComment(comment + emoji);
   };
 
-  console.log({ showEmojiBox });
-
   useOutsideAlerter(emojiBoxRef, setShowEmojiBox);
 
   return (

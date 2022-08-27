@@ -54,9 +54,6 @@ const Navbar = () => {
       search();
     }
   }, [inputSearch]);
-
-  console.log(showSearchedUser);
-
   useOutsideAlerter(boxListRef, setShowBoxList);
   useOutsideAlerter(boxSearchRef, setShowSearchedUser);
 
