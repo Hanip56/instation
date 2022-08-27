@@ -6,8 +6,6 @@ function useOutsideAlerter(ref, set) {
      * Alert if clicked on outside of element
      */
 
-    console.log("clicked outside");
-
     function handleClickOutside(event) {
       if (ref.current && !ref.current.contains(event.target)) {
         // console.log(ref);

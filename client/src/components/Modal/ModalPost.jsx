@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addComment,
@@ -19,6 +19,10 @@ import { VscSmiley } from "react-icons/vsc";
 import { followUser, unfollowUser } from "../../features/auth/userSlice";
 import { Link } from "react-router-dom";
 import { BsThreeDots } from "react-icons/bs";
+import data from "@emoji-mart/data";
+import Picker from "@emoji-mart/react";
+import useOutsideAlerter from "../../utils/ClickOutside";
+import { get_time_diff } from "../../utils/getTimeDiff";
 
 const ModalPost = () => {
   const dispatch = useDispatch();
@@ -33,6 +37,8 @@ const ModalPost = () => {
   );
   const [totalLikes, setTotalLikes] = useState(currentPost?.likes?.length);
   const [comment, setComment] = useState("");
+  const [showEmojiBox, setShowEmojiBox] = useState(false);
+  const emojiBoxRef = useRef(null);
 
   const handleHideModal = () => {
     dispatch(hideModalPostList());
@@ -87,6 +93,20 @@ const ModalPost = () => {
   const handleShowModalOptions = () => {
     dispatch(showModalOptions(currentPost));
   };
+
+  const addEmoji = (e) => {
+    let sym = e.unified.split("-");
+    let codesArray = [];
+    sym.forEach((el) => codesArray.push("0x" + el));
+    let emoji = String.fromCodePoint(...codesArray);
+    setComment(comment + emoji);
+  };
+
+  const postDate = new Date(currentPost?.createdAt);
+
+  const currentPostDate = get_time_diff(postDate);
+
+  useOutsideAlerter(emojiBoxRef, setShowEmojiBox);
 
   const headerEl = (
     <header className="flex py-2 px-4 gap-x-2 border border-transparent border-b-gray-200">
@@ -220,14 +240,33 @@ const ModalPost = () => {
                 </p>
               </div>
               <div>
-                <p className="font-light text-gray-500 text-xs">20 hours ago</p>
+                <p className="font-light text-gray-500 text-xs">
+                  {currentPostDate}
+                </p>
               </div>
               <div className="hidden sm:block border border-transparent border-t-gray-200 py-2">
                 <form
                   onSubmit={handleSubmitComment}
-                  className="w-full flex gap-x-2"
+                  className="relative w-full flex gap-x-2"
                 >
-                  <button type="button">
+                  {showEmojiBox && (
+                    <div
+                      className="absolute bottom-8 -left-32"
+                      ref={emojiBoxRef}
+                    >
+                      <Picker
+                        data={data}
+                        onEmojiSelect={addEmoji}
+                        theme={"light"}
+                        emojiButtonSize={30}
+                        emojiSize={16}
+                      />
+                    </div>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => setShowEmojiBox((prev) => !prev)}
+                  >
                     <VscSmiley className="text-2xl hover:text-black/40" />
                   </button>
                   <input

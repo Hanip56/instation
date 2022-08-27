@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import { useState } from "react";
 import {
   IoHeartOutline,
@@ -20,11 +20,16 @@ import {
   showModalThreeDots,
 } from "../../features/postList/postListSlice";
 import { get_time_diff } from "../../utils/getTimeDiff";
+import data from "@emoji-mart/data";
+import Picker from "@emoji-mart/react";
+import useOutsideAlerter from "../../utils/ClickOutside";
 
 const Card = ({ post }) => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
   const [comment, setComment] = useState("");
+  const [showEmojiBox, setShowEmojiBox] = useState(false);
+  const emojiBoxRef = useRef(null);
 
   const liked = post?.likes?.some((e) => e?._id === user?._id);
 
@@ -63,6 +68,18 @@ const Card = ({ post }) => {
   const postDate = new Date(post?.createdAt);
 
   const currentPostDate = get_time_diff(postDate);
+
+  const addEmoji = (e) => {
+    let sym = e.unified.split("-");
+    let codesArray = [];
+    sym.forEach((el) => codesArray.push("0x" + el));
+    let emoji = String.fromCodePoint(...codesArray);
+    setComment(comment + emoji);
+  };
+
+  console.log({ showEmojiBox });
+
+  useOutsideAlerter(emojiBoxRef, setShowEmojiBox);
 
   return (
     <div className="w-[90%] sm:w-[32rem] mx-auto rounded-md border border-gray-300 bg-white">
@@ -142,8 +159,25 @@ const Card = ({ post }) => {
         </div>
       </main>
       <footer className="flex justify-between px-3 p-2 border border-t-gray-200">
-        <form onSubmit={handleSubmitComment} className="w-full flex gap-x-2">
-          <button type="button">
+        <form
+          onSubmit={handleSubmitComment}
+          className="relative w-full flex gap-x-2"
+        >
+          {showEmojiBox && (
+            <div className="absolute top-8 -left-4" ref={emojiBoxRef}>
+              <Picker
+                data={data}
+                onEmojiSelect={addEmoji}
+                theme={"light"}
+                emojiButtonSize={30}
+                emojiSize={16}
+              />
+            </div>
+          )}
+          <button
+            type="button"
+            onClick={() => setShowEmojiBox((prev) => !prev)}
+          >
             <VscSmiley className="text-2xl hover:text-black/40" />
           </button>
           <input
