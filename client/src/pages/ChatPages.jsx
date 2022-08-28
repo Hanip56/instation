@@ -154,7 +154,7 @@ const ChatPages = () => {
                 <h2 className="text-xl font-bold">
                   {currentConv?.member?.username}
                 </h2>
-                <p className="text-xs text-gray-400">Active 1h ago</p>
+                <p className="text-xs text-gray-400"></p>
               </div>
             </div>
             <div

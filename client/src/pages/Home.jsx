@@ -100,7 +100,11 @@ const Home = () => {
               <Link to={`/${user?.username}`}>
                 <div className="flex items-center gap-x-4">
                   <div className="w-16 h-16 rounded-full overflow-hidden border border-gray-200">
-                    <img src={user?.profilePicture} alt={user?.username} />
+                    <img
+                      src={user?.profilePicture}
+                      alt={user?.username}
+                      className="w-full h-full object-cover object-center"
+                    />
                   </div>
                   <div>
                     <h4 className="font-semibold">{user?.username}</h4>

@@ -165,14 +165,16 @@ const Navbar = () => {
                           <p>Profile</p>
                         </li>
                       </NavLink>
-                      <li className="boxList">
+                      {/* <li className="boxList">
                         <IoBookmarkOutline />
                         <p>Saved</p>
-                      </li>
-                      <li className="boxList">
-                        <IoSettingsOutline />
-                        <p>Settings</p>
-                      </li>
+                      </li> */}
+                      <NavLink to={`/${user?.username}`}>
+                        <li className="boxList">
+                          <IoSettingsOutline />
+                          <p>Settings</p>
+                        </li>
+                      </NavLink>
                       <li
                         onClick={handleLogout}
                         className="p-3 w-full hover:bg-[#fafafa] border border-t-gray-200"
