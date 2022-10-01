@@ -13,6 +13,7 @@ const ModalThreeDots = () => {
 
   const handleUnfollow = () => {
     dispatch(unfollowUser(showModalThreeDots?.data?.postedBy?._id));
+    dispatch(hideModalThreeDots());
   };
 
   return (
