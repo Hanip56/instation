@@ -54,6 +54,11 @@ const ChatPages = () => {
         createdAt: Date.now(),
       });
     });
+
+    return () => {
+      socket?.disconnect();
+      socket?.close();
+    };
   }, [user, socket]);
 
   // useEffect(() => {
