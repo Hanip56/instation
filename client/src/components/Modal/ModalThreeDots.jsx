@@ -24,7 +24,7 @@ const ModalThreeDots = () => {
       ></div>
 
       <div className="fixed left-[50%] top-[50%] -translate-y-[50%] -translate-x-[50%] z-50 flex justify-center items-center rounded-md">
-        <div className="w-[22rem] sm:w-[25rem] bg-white rounded-md overflow-hidden flex flex-col divide-y-[1px] text-sm ">
+        <div className="w-[18rem] sm:w-[25rem] bg-white rounded-md overflow-hidden flex flex-col divide-y-[1px] text-sm ">
           {/* <button className="w-full py-3 active:bg-gray-300/30 ">Open</button> */}
           <button
             className="w-full py-3 active:bg-gray-300/30 text-red-500 font-semibold"

@@ -150,11 +150,17 @@ const chattingSlice = createSlice({
         state.isErrorConv = true;
         state.messageConv = action.payload;
       })
+      .addCase(addConversation.fulfilled, (state, action) => {
+        state.conversations.push({
+          _id: action.payload._id,
+          members: action.payload.members,
+        });
+      })
       .addCase(deleteConversation.fulfilled, (state, action) => {
         state.conversations = state.conversations.filter(
           (conv) => conv._id.toString() !== action.payload.toString()
         );
-        state.currentConv = null;
+        state.currentConv = {};
         state.messages = [];
       })
       .addCase(getMessages.pending, (state) => {

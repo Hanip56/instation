@@ -76,8 +76,8 @@ const ProfilePages = () => {
       )}
 
       <div className="w-full space-y-2">
-        <div className="flex gap-x-2 mb-12">
-          <div className="w-44 h-44 overflow-hidden rounded-full border border-gray-200 mx-12">
+        <div className="flex gap-x-2 mb-6 md:mb-12">
+          <div className="w-24 h-24 md:w-44 md:h-44 overflow-hidden rounded-full border border-gray-200 mx-2 md:mx-12">
             <img
               src={user?.profilePicture}
               alt={user?.username}
@@ -85,22 +85,26 @@ const ProfilePages = () => {
             />
           </div>
           <div className="basis-[20rem] space-y-8">
-            <div className="flex gap-x-4 items-center">
-              <h2 className="text-4xl font-light">{user?.username}</h2>
+            <div className="flex flex-col md:flex-row gap-4 md:items-center">
+              <h2 className="text-2xl md:text-4xl font-light">
+                {user?.username}
+              </h2>
 
-              {!isOwnProfile && isFollowed && (
-                <Link to="/chat" className="ml-auto">
-                  <MessageBtn following={user} />
-                </Link>
-              )}
-              {!isOwnProfile && <ToggleFollowUnfollow following={user} />}
+              <div className="flex flex-row gap-3 self-start">
+                {!isOwnProfile && isFollowed && (
+                  <Link to="/chat" className="ml-auto">
+                    <MessageBtn following={user} />
+                  </Link>
+                )}
+                {!isOwnProfile && <ToggleFollowUnfollow following={user} />}
+              </div>
               {isOwnProfile && (
-                <Link to="/edit" className="ml-auto">
+                <Link to="/edit" className="md:ml-auto">
                   <button className="actionBtn">Edit Profile</button>
                 </Link>
               )}
             </div>
-            <div className="flex w-full justify-between">
+            <div className="flex w-full justify-around md:justify-between text-sm md:text-base">
               <p>
                 <span className="font-semibold">{user?.posts?.length}</span>{" "}
                 Posts
@@ -122,7 +126,9 @@ const ProfilePages = () => {
                 Followings
               </p>
             </div>
-            <h3 className="font-semibold text-xl">{user?.fullname}</h3>
+            <h3 className="font-semibold text-base md:text-xl">
+              {user?.fullname}
+            </h3>
             <p>{user?.porfileBio}</p>
           </div>
         </div>

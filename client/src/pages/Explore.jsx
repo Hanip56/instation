@@ -37,7 +37,7 @@ const Explore = () => {
     <>
       <div className="w-full">
         {isLoading && <SkeletonExplore />}
-        <main className="grid grid-cols-3 gap-4">
+        <main className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-4">
           {!isLoading &&
             postList?.map((post, idx) => (
               <ImageCard post={post} key={post?._id} />

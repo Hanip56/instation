@@ -120,7 +120,10 @@ const ModalPost = () => {
       </Link>
       <div>
         <h4 className="font-semibold">
-          {currentPost?.postedBy?.username}
+          <Link to={`/${currentPost?.postedBy?.username}`}>
+            <span>{currentPost?.postedBy?.username}</span>
+          </Link>
+
           {!isFollowed && !isOwnUser ? (
             <span
               className="text-xs text-blue-ig cursor-pointer"
@@ -201,9 +204,12 @@ const ModalPost = () => {
                     </Link>
                     <div>
                       <p>
-                        <span className="font-semibold">
-                          {comment?.user?.username}
-                        </span>{" "}
+                        <Link to={`/${comment?.user?.username}`}>
+                          <span className="font-semibold">
+                            {comment?.user?.username}
+                          </span>{" "}
+                        </Link>
+
                         {comment?.comment}
                       </p>
                     </div>

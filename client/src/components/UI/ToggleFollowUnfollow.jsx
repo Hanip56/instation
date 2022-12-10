@@ -2,7 +2,7 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { followUser, unfollowUser } from "../../features/auth/userSlice";
 
-const ToggleFollowUnfollow = ({ following }) => {
+const ToggleFollowUnfollow = ({ following, containerStyle }) => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
 
@@ -20,9 +20,9 @@ const ToggleFollowUnfollow = ({ following }) => {
   return (
     <button
       onClick={isFollowed ? handleUnfollow : handleFollow}
-      className={`ml-auto px-3 py-1 border border-gray-300 font-semibold text-sm outline-none ${
+      className={`px-3 py-1 border border-gray-300 font-semibold text-sm outline-none ${
         !isFollowed && "bg-blue-ig text-white"
-      }`}
+      } ${containerStyle}`}
     >
       {isFollowed ? "Following" : "Follow"}
     </button>

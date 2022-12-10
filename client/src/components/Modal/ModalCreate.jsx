@@ -59,7 +59,7 @@ const ModalCreate = () => {
                 share
               </button>
             </div>
-            <div className="flex h-[30rem]">
+            <div className="flex flex-col md:flex-row h-[30rem]">
               <div className="basis-[65%] w-full h-full bg-[#fafafa] flex justify-center items-center">
                 {/* input file */}
                 {postImage ? (
@@ -108,7 +108,7 @@ const ModalCreate = () => {
                     name="caption"
                     onChange={(e) => setCaption(e.target.value)}
                     value={caption}
-                    placeholder="Write a caption"
+                    placeholder="Write caption"
                     cols="30"
                     rows="10"
                   ></textarea>

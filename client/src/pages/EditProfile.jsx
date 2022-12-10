@@ -73,12 +73,12 @@ const EditProfile = () => {
       )}
 
       <div className="w-full">
-        <main className="bg-white w-full flex border border-gray-500/50 rounded-sm p-4 px-6 ">
-          <div className="basis-40">
+        <main className="bg-white w-full flex border border-gray-500/50 rounded-sm py-2 px-4 md:py-4 md:px-6 ">
+          <div className="basis-40 hidden md:block">
             <p>Edit Profile</p>
           </div>
-          <div className="space-y-4 p-2">
-            <div className="flex gap-x-6 items-center ml-24">
+          <div className="space-y-4 p-2 w-full">
+            <div className="flex gap-x-6 items-center md:ml-24">
               <div className="w-8 h-8 overflow-hidden rounded-full">
                 <img
                   src={user?.profilePicture}
@@ -153,7 +153,7 @@ const EditProfile = () => {
                   onChange={handleChange}
                 />
               </div>
-              <button className="relative py-1 px-4 bg-blue-ig rounded-md w-28 text-sm ml-[9.5rem] text-white text-center flex justify-center">
+              <button className="relative py-1 px-4 bg-blue-ig rounded-md w-28 text-sm mx-auto md:ml-[9.5rem] text-white text-center flex justify-center">
                 {isLoading && <LdsSpinner width={"1rem"} height={"1rem"} />}
                 {!isLoading && "Submit"}
               </button>

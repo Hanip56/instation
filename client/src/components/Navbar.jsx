@@ -1,12 +1,10 @@
 import React, { useEffect, useRef } from "react";
-import { HiHome } from "react-icons/hi";
 import {
   IoPaperPlaneOutline,
   IoCompassOutline,
   IoCompassSharp,
   IoHeartOutline,
-  IoHeartSharp,
-  IoBookmarkOutline,
+  IoHeart,
   IoSettingsOutline,
   IoHomeOutline,
   IoHomeSharp,
@@ -24,7 +22,9 @@ import axios from "axios";
 
 const Navbar = () => {
   const [showBoxList, setShowBoxList] = useState(false);
+  const [showNotif, setShowNotif] = useState(false);
   const boxListRef = useRef(null);
+  const notifRef = useState(null);
   const boxSearchRef = useRef(null);
   const { user } = useSelector((state) => state.user);
   const [searchedUser, setSearchedUser] = useState([]);
@@ -56,9 +56,10 @@ const Navbar = () => {
   }, [inputSearch]);
   useOutsideAlerter(boxListRef, setShowBoxList);
   useOutsideAlerter(boxSearchRef, setShowSearchedUser);
+  useOutsideAlerter(notifRef, setShowNotif);
 
   return (
-    <nav className="fixed z-40 bg-white w-screen h-14 border border-b-gray">
+    <nav className="fixed z-40 bg-white w-full h-14 border border-b-gray">
       <div className="flex px-3 justify-between items-center max-w-5xl h-full mx-auto gap-x-2">
         <div>INSTATION</div>
         <div className="flex gap-x-2 items-center">
@@ -133,10 +134,11 @@ const Navbar = () => {
                   }
                 </NavLink>
               </li>
-              <li>
-                <NavLink to="">
-                  <IoHeartOutline />
-                </NavLink>
+              <li
+                onClick={() => setShowNotif((state) => !state)}
+                className="cursor-pointer"
+              >
+                {showNotif ? <IoHeart /> : <IoHeartOutline />}
               </li>
               <li
                 className={`relative cursor-pointer border  ${
@@ -182,6 +184,17 @@ const Navbar = () => {
                         <p>Log Out</p>
                       </li>
                     </ul>
+                  </div>
+                )}
+                {showNotif && (
+                  <div
+                    ref={notifRef}
+                    className="absolute text-sm right-10 w-72 rounded-md bg-white shadow-black/40 shadow-md p-4"
+                  >
+                    <h3 className="text-base font-bold">Notifications</h3>
+                    <div className="mt-4">
+                      <p>There's no notifications</p>
+                    </div>
                   </div>
                 )}
               </li>

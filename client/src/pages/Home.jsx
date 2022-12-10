@@ -128,13 +128,13 @@ const Home = () => {
           {/* footer */}
           <div className=" text-gray-500/50 ">
             <div className="text-xs leading-6">
-              <Link to="/about">About</Link> -<Link to="/about">Help</Link> -
-              <Link to="/about">Press</Link> -<Link to="/about">API</Link> -
-              <Link to="/about">Jobs</Link> -<Link to="/about">Privacy</Link> -
-              <Link to="/about">Terms</Link> -<Link to="/about">Locations</Link>{" "}
-              -<Link to="/about">Language</Link>
+              <Link to="#">About</Link> -<Link to="#">Help</Link> -
+              <Link to="#">Press</Link> -<Link to="#">API</Link> -
+              <Link to="#">Jobs</Link> -<Link to="#">Privacy</Link> -
+              <Link to="#">Terms</Link> -<Link to="#">Locations</Link> -
+              <Link to="#">Language</Link>
             </div>
-            <h4 className="text-sm mt-3">c 2022 INSTAGRAM FROM META</h4>
+            <h4 className="text-sm mt-3">© 2022 INSTATION</h4>
           </div>
         </aside>
       </div>

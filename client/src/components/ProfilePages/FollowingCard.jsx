@@ -23,7 +23,7 @@ const FollowingCard = ({ following }) => {
           </div>
         </Link>
 
-        <ToggleFollowUnfollow following={following} />
+        <ToggleFollowUnfollow following={following} containerStyle="ml-auto" />
       </div>
     </>
   );
